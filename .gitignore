@@ -13,3 +13,6 @@ Thumbs.db
 .mypy_cache/
 exercises/*/my-prompt*.md
 exercises/*/notes*.md
+
+# Local study reports.
+exercises/01-study/results/
