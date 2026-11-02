@@ -1,0 +1,13 @@
+# Local exercise results and machine-specific settings.
+exercises/*/answer*.md
+exercises/*/attempts/
+.claude/settings.local.json
+__pycache__/
+*.py[cod]
+.venv/
+.env
+.env.*
+.DS_Store
+Thumbs.db
+.ruff_cache/
+.mypy_cache/

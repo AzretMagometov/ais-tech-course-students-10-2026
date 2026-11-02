@@ -1,0 +1,19 @@
+{
+  "hooks": {
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python",
+            "args": [
+              "${CLAUDE_PROJECT_DIR}/tools/check_answer.py",
+              "--hook"
+            ],
+            "timeout": 10
+          }
+        ]
+      }
+    ]
+  }
+}
