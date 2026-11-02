@@ -16,3 +16,6 @@ exercises/*/notes*.md
 
 # Local study reports.
 exercises/01-study/results/
+
+# Local duplicate-finder implementation and trial data.
+exercises/02-duplicate-finder/work/
