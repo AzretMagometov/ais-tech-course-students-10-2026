@@ -11,3 +11,5 @@ __pycache__/
 Thumbs.db
 .ruff_cache/
 .mypy_cache/
+exercises/*/my-prompt*.md
+exercises/*/notes*.md

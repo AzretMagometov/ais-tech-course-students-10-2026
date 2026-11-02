@@ -1,0 +1,28 @@
+{
+  "permissions": {
+    "deny": [
+      "Read(/_reference/**)",
+      "Edit(/_reference/**)",
+      "Edit(/.claude/**)",
+      "Edit(/.codex/**)",
+      "Edit(/tools/**)"
+    ]
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": ".*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python",
+            "args": [
+              "${CLAUDE_PROJECT_DIR}/tools/guard_reference.py"
+            ],
+            "timeout": 10
+          }
+        ]
+      }
+    ]
+  }
+}
