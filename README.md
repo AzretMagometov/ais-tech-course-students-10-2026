@@ -19,6 +19,7 @@
 |---|---|
 | [Воркфлоу работы с агентом](docs/agent-workflow.md) | Четыре навыка Азрета: от требований до реализации |
 | [Получение копии и запуск](docs/start.md) | Windows, macOS/Linux, ZIP и Git |
+| [Презентация первой лекции](materials/lecture-01/index.html) | 23 слайда об устройстве модели и работе агента |
 | [Поиск одинаковых файлов](exercises/02-duplicate-finder/README.md) | Создание приложения, проверка и изменение требований |
 | [Упражнение Study](exercises/01-study/README.md) | Проверка понимания прочитанного |
 | [Школьная механика](exercises/01-study/materials/mechanics.md) | Учебный материал по механике |

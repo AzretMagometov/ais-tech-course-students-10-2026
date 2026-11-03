@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="light"><meta name="description" content="Как работает модель, как поручить агенту задачу и проверить результат. Первая лекция AI Sprint."><title>Агент на вашей задаче — AI Sprint</title><link rel="stylesheet" href="styles.css"><script src="deck.js" defer></script><script src="generation.js" defer></script><script src="prompt-example.js" defer></script></head><body><main id="deck" aria-label="Первая лекция AI Sprint">
+<section class="slide " id="start" data-title="Агент на вашей задаче" aria-labelledby="title-start" >
+<header><span class="logo">ai_sprint<span>.</span></span><span class="eyebrow">ЛЕКЦИЯ 01</span><span class="page">1 / 23</span></header>
+<div class="hero"><div><p class="kicker">ОТ ВОПРОСА К РЕЗУЛЬТАТУ</p><h2 id="title-start">Агент на<br>вашей задаче</h2><p class="intro">Поручить работу.<br>Увидеть действия.<br><em>Проверить результат.</em></p></div><img class="art" src="assets/illustrations/workbench.svg" alt="Иллюстрация: документы, модель с инструментами и готовый файл"></div>
+
+<div class="agent-examples"><span class="micro">НАПРИМЕР</span><div><img src="assets/agents/claude.svg" alt="Знак Claude">Claude Code</div><div><img src="assets/agents/codex.png" alt="Знак OpenAI">Codex</div><div><img src="assets/agents/cursor.svg" alt="Знак Cursor">Cursor</div><div><img src="assets/agents/pi.svg" alt="Знак Pi">pi</div><span class="other-agents">и другие</span></div><footer><span>АГЕНТ НА ВАШЕЙ ЗАДАЧЕ</span><span>03.11.2026 · НПП АС</span></footer>
+</section>
+<section class="slide " id="foundation" data-title="Одна модель под разные задачи" aria-labelledby="title-foundation" hidden><header><span class="logo">ai_sprint<span>.</span></span><span class="eyebrow">01 / КАК УСТРОЕНА МОДЕЛЬ</span><span class="page">2 / 23</span></header><div class="editorial"><div><h2 id="title-foundation">Одна модель<br>под разные задачи</h2><p class="term-definition"><strong>LLM (большая языковая модель)</strong> — модель, обученная работать с языком: продолжать текст и выполнять текстовые задачи.</p><p class="term-definition"><strong>Фундаментальная модель</strong> обучена на широком наборе данных и служит основой для разных задач.</p><p class="term-definition"><strong>Мультимодальная модель</strong> работает с несколькими видами данных: например, текстом, изображениями и звуком.</p><p class="term-definition"><strong>Агент</strong> — программа, которая использует модель и инструменты для выполнения задачи.</p></div><svg class="foundation-art" viewBox="0 0 700 510" role="img" aria-label="Текст, изображения и звук поступают в общую модель, которая применяется к разным задачам"><rect width="700" height="510" rx="30" fill="#e6ece2"/><g stroke="#397d70" stroke-width="3" fill="none"><path d="M160 110H246V230H280M160 255H280M160 400H246V280H280M444 255H500V110H547M500 255V400H547"/></g><g fill="#fbf8f0" stroke="#9bb09b" stroke-width="2"><rect x="34" y="62" width="150" height="96" rx="14"/><rect x="34" y="207" width="150" height="96" rx="14"/><rect x="34" y="352" width="150" height="96" rx="14"/></g><g fill="#397d70" font-family="Arial,sans-serif" font-size="20" text-anchor="middle"><text x="109" y="122">Текст</text><text x="109" y="267">Изображения</text><text x="109" y="412">Звук</text></g><rect x="280" y="177" width="165" height="155" rx="24" fill="#232826"/><g stroke="#ef785e" stroke-width="4"><path d="M362 200V306M310 253H415M325 216L400 291M325 291L400 216"/></g><g fill="#232826" font-family="Arial,sans-serif" font-size="22"><text x="558" y="116">Объяснить</text><text x="558" y="261">Сравнить</text><text x="558" y="406">Создать</text></g><text x="362.5" y="375" text-anchor="middle" font-family="Arial,sans-serif" font-size="19" fill="#397d70">Общая база</text></svg></div><footer><span>АГЕНТ НА ВАШЕЙ ЗАДАЧЕ</span><span>03.11.2026 · НПП АС</span></footer></section>
+<section class="slide " id="training" data-title="Pretrain и finetune" aria-labelledby="title-training" hidden><header><span class="logo">ai_sprint<span>.</span></span><span class="eyebrow">01 / КАК УСТРОЕНА МОДЕЛЬ</span><span class="page">3 / 23</span></header><h2 id="title-training">Pretrain и finetune</h2><div class="learning-stages"><article><span class="stage-label">01 / PRETRAINING · ПРЕДОБУЧЕНИЕ</span><h3>Выучить закономерности</h3><div class="stage-visual"><span>Много данных</span><b>→</b><span class="mini-network">● ─ ●<br>╲ ╳ ╱<br>● ─ ●</span></div><p class="term-definition"><strong>Предобучение (pretraining)</strong> — обучение общим закономерностям на большом массиве данных.</p><p class="term-definition"><strong>Веса</strong> — числа внутри модели, которые меняются при обучении.</p></article><article><span class="stage-label">02 / POST-TRAINING · ПОСЛЕДУЮЩАЯ НАСТРОЙКА</span><h3>Отвечать нужным образом</h3><div class="stage-visual"><span>Задание + образец</span><b>→</b><span class="sample-answer">Ответ<br>✓ формат<br>✓ инструкция</span></div><p class="term-definition"><strong>Post-training</strong> — настройка модели для выполнения инструкций и целевых задач.</p><p class="term-definition"><strong>Fine-tuning</strong> — дообучение на выбранных данных: например, заданиях и желаемых ответах.</p></article></div><div class="training-concepts"><div><p class="term-definition"><strong>Alignment</strong> — согласование поведения модели с целями, ценностями и требованиями людей.</p></div><div><p class="term-definition"><strong>Inference</strong> — обработка запроса и построение ответа с помощью обученной модели.</p></div></div><p class="footnote">Обычный inference использует уже обученные веса. Для изменения весов требуется обучение.</p><footer><span>АГЕНТ НА ВАШЕЙ ЗАДАЧЕ</span><span>03.11.2026 · НПП АС</span></footer></section>
+
+<section class="slide " id="tokens" data-title="Токены — компромисс между буквами и словами" aria-labelledby="title-tokens" hidden><header><span class="logo">ai_sprint<span>.</span></span><span class="eyebrow">01 / КАК УСТРОЕНА МОДЕЛЬ</span><span class="page">4 / 23</span></header><h2 id="title-tokens">Токены — компромисс<br>между буквами и словами</h2><p class="term-definition"><strong>Токен</strong> — единица разбиения текста: часть слова, слово, знак или байтовый фрагмент.</p><p class="deck-lead">Модель обрабатывает текст в виде токенов. Сначала текст нужно разбить на эти единицы.</p><div class="token-compromise"><article><span class="micro">ПО БУКВАМ</span><div class="letter-example">э л е к т р о к о т и к</div><h3>Маленький словарь</h3><p>Но длинные слова превращаются в длинные последовательности.</p></article><article class="subword-choice"><span class="micro">ПО ФРАГМЕНТАМ</span><div class="subword-example"><span>электро</span><span>кот</span><span>ик</span></div><h3>Повторно используемые части</h3><p>Один фрагмент содержит больше букв. Части можно соединять в новые слова.</p></article><article><span class="micro">ПО ЦЕЛЫМ СЛОВАМ</span><div class="whole-example">электрокотик</div><h3>Нужен огромный словарь</h3><p>Редкие формы и придуманные слова трудно перечислить заранее.</p></article></div><p class="footnote">Схема разбиения на фрагменты. Токены могут пересекать границы корней и суффиксов.</p><footer><span>АГЕНТ НА ВАШЕЙ ЗАДАЧЕ</span><span>03.11.2026 · НПП АС</span></footer></section>
+<section class="slide " id="vectors" data-title="Текст превращается в числа" aria-labelledby="title-vectors" hidden>
+<header><span class="logo">ai_sprint<span>.</span></span><span class="eyebrow">01 / КАК УСТРОЕНА МОДЕЛЬ</span><span class="page">5 / 23</span></header>
+<h2 id="title-vectors">Текст превращается в числа</h2><p class="term-definition"><strong>Эмбеддинг</strong> — выученное числовое представление: вектор, с которым модель выполняет вычисления.</p><div class="token-scene"><div class="sentence">«Проверь документ»</div><div class="down-arrow">↓ <span>разбиение на токены</span></div><div class="token-row"><span>Про</span><span>верь</span><span>документ</span></div><div class="vector-lines"><i></i><i></i><i></i></div><div class="vector-row"><div><b>0.12</b><b>−0.48</b><b>0.73</b><b>…</b></div><div><b>−0.31</b><b>0.85</b><b>0.06</b><b>…</b></div><div><b>0.64</b><b>0.22</b><b>−0.57</b><b>…</b></div></div><div class="diagram-caption"><p class="term-definition"><strong>Вектор</strong> — упорядоченный набор чисел.</p></div></div><p class="bottom-line">Модель учит свои начальные эмбеддинги. При дальнейшей обработке представления меняются с учётом контекста.</p>
+<p class="footnote">Схема числового представления текста.</p>
+<footer><span>АГЕНТ НА ВАШЕЙ ЗАДАЧЕ</span><span>03.11.2026 · НПП АС</span></footer>
+</section>
+
+
+<section class="slide" id="context" data-title="Контекст меняет смысл слова" aria-labelledby="title-context" hidden>
+<header><span class="logo">ai_sprint<span>.</span></span><span class="eyebrow">01 / КАК УСТРОЕНА МОДЕЛЬ</span><span class="page">6 / 23</span></header>
+<div class="editorial"><div><h2 id="title-context">Контекст меняет<br>смысл слова</h2><p class="intro">«Дверь заперта. Где мой <em>ключ</em>?»<br>«У подножия скалы бьёт <em>ключ</em>».</p><p class="term-definition"><strong>Контекст</strong> — доступные модели сообщения, инструкции и материалы.</p><p class="term-definition"><strong>Контекстное окно</strong> — предел числа токенов, которые модель может учитывать при одном обращении.</p><p class="term-definition"><strong>Attention (внимание)</strong> взвешивает влияние доступных токенов при расчёте представления текущего токена.</p></div><img class="art" src="assets/illustrations/contexts.svg" alt="Дверной ключ и родник: контекст помогает различить значения слова ключ"></div>
+<div class="context-chain"><div><strong>Контекст</strong><span>доступные слова<br>и материалы</span></div><b>→</b><div><strong>Вектор токена</strong><span>меняется с учётом<br>этого окружения</span></div><b>→</b><div><strong>Дальнейшие<br>вычисления</strong><span>используют новое<br>представление</span></div><b>→</b><div><strong>Следующий токен</strong><span>меняются вероятности<br>возможных вариантов</span></div></div>
+<p class="footnote">При обработке запроса меняются представления токенов. Обученные веса остаются прежними.</p>
+<footer><span>АГЕНТ НА ВАШЕЙ ЗАДАЧЕ</span><span>03.11.2026 · НПП АС</span></footer>
+</section>
+<section class="slide night" id="prediction" data-title="Ответ строится по частям" aria-labelledby="title-prediction" hidden>
+<header><span class="logo">ai_sprint<span>.</span></span><span class="eyebrow">01 / КАК УСТРОЕНА МОДЕЛЬ</span><span class="page">7 / 23</span></header>
+<h2 id="title-prediction">Ответ строится по частям</h2><p class="deck-lead">Выбранный токен добавляется в контекст и влияет на следующий шаг.</p>
+<div class="generation-interactive" hidden>
+<div class="generation-stage">
+<div class="generation-context"><span class="micro">КОНТЕКСТ + ВЫБРАННЫЕ ТОКЕНЫ</span><p class="generation-sentence">Чтобы проверить результат,<span id="generated-text"></span></p></div>
+<div class="generation-candidates"><span class="micro" id="candidate-heading">КАНДИДАТЫ НА СЛЕДУЮЩИЙ ТОКЕН</span><div id="candidate-list"></div></div>
+</div>
+</div>
+<div class="generation-print"><div><span class="micro">КОНТЕКСТ + ВЫБРАННЫЕ ТОКЕНЫ</span><p>Чтобы проверить результат, откройте файл отчёта, сравните каждое значение с исходным документом и отдельно отметьте условия, для которых не найдено подтверждение.</p></div><div><span class="micro">КАНДИДАТЫ НА СЛЕДУЮЩИЙ ТОКЕН</span><p>·данных — 42%<br><em>·отч — 35%</em><br>·проекта — 15%<br>Остальные — 8%</p><p class="explain">После каждого выбора контекст дополняется, а вероятности следующих токенов пересчитываются.</p></div></div>
+<p class="footnote">Схема генерации. · обозначает пробел. Выбор токена не всегда совпадает с максимальной вероятностью.</p>
+<footer><span>АГЕНТ НА ВАШЕЙ ЗАДАЧЕ</span><span>03.11.2026 · НПП АС</span></footer>
+</section>
+<section class="slide" id="brief" data-title="Что включить в хороший промпт" aria-labelledby="title-brief" hidden>
+<header><span class="logo">ai_sprint<span>.</span></span><span class="eyebrow">02 / КАК СФОРМУЛИРОВАТЬ ЗАДАЧУ</span><span class="page">8 / 23</span></header>
+<h2 id="title-brief">Что включить в хороший промпт</h2>
+<p class="term-definition"><strong>Промпт</strong> — текст запроса к модели: задача и необходимые условия.</p>
+<div class="prompt-rules">
+<article class="prompt-rule"><h3>Задача</h3><p>Что сделать, зачем<br>и какой результат нужен.</p></article>
+<article class="prompt-rule"><h3>Исполнитель и адресат</h3><p>Роль и рабочая среда. Для кого результат и что адресат уже знает.</p></article>
+<article class="prompt-rule"><h3>Формат</h3><p>Структура, объём, язык<br>и место сохранения.</p></article>
+<article class="prompt-rule"><h3>Примеры</h3><p>При необходимости: образец результата и важные исключения.</p></article>
+<article class="prompt-rule"><h3>Источники</h3><p>Файлы, ссылки, версии.<br>Где искать дополнительные сведения.</p></article>
+<article class="prompt-rule"><h3>Ограничения и проверка</h3><p>Границы действий, критерии готовности. Что уточнить, если данных мало.</p></article>
+</div>
+<p class="prompt-refine">Чем яснее задача и условия, тем выше шанс получить полезный ответ.<br>Если задача непонятна, сначала задай уточняющие вопросы. Не подменяй факты догадками.</p>
+<footer><span>АГЕНТ НА ВАШЕЙ ЗАДАЧЕ</span><span>03.11.2026 · НПП АС</span></footer>
+</section>
+<section class="slide" id="prompt-example" data-title="Пример слабого и сильного промпта" aria-labelledby="title-prompt-example" hidden>
+<header><span class="logo">ai_sprint<span>.</span></span><span class="eyebrow">02 / КАК СФОРМУЛИРОВАТЬ ЗАДАЧУ</span><span class="page">9 / 23</span></header>
+<h2 id="title-prompt-example">Пример слабого и сильного промпта</h2>
+<div class="prompt-comparison">
+<div class="prompt-weak"><h3>Слабый промпт</h3><p>Посмотри документацию<br>и сделай таблицу.</p></div>
+<div class="prompt-complete"><h3>Сильный промпт</h3>
+<p class="prompt-text"><span class="prompt-part prompt-task" id="prompt-task">Извлеки требования к питанию оборудования для проверки проекта.</span> <span class="prompt-part prompt-audience" id="prompt-audience">Ты — инженерный ассистент: извлекай требования из технической документации, сохраняй единицы и условия. Результат нужен инженеру, который знает схему, но не читал руководство.</span> <span class="prompt-part prompt-sources" id="prompt-sources">Основной источник — manual.md. Пояснения ищи в notes.md.</span> <span class="prompt-part prompt-format" id="prompt-format">Сохрани requirements.md: таблица «Параметр | Значение | Единица | Пункт».</span> <span class="prompt-part prompt-sample" id="prompt-sample">Образец строки: «Напряжение | … | В | §…».</span> <span class="prompt-part prompt-check" id="prompt-check">Исходники не меняй. Сверь строки с документом. Отсутствующее пометь «не найдено».</span> <span class="prompt-part prompt-questions" id="prompt-questions">Если задача или условия непонятны, сначала задай уточняющие вопросы.</span></p>
+</div></div>
+<div class="prompt-legend" role="group" aria-label="Части хорошего промпта">
+<button type="button" class="prompt-task" data-prompt-target="prompt-task" aria-controls="prompt-task" disabled><i aria-hidden="true"></i>Задача</button>
+<button type="button" class="prompt-audience" data-prompt-target="prompt-audience" aria-controls="prompt-audience" disabled><i aria-hidden="true"></i>Исполнитель и адресат</button>
+<button type="button" class="prompt-sources" data-prompt-target="prompt-sources" aria-controls="prompt-sources" disabled><i aria-hidden="true"></i>Источники</button>
+<button type="button" class="prompt-format" data-prompt-target="prompt-format" aria-controls="prompt-format" disabled><i aria-hidden="true"></i>Формат</button>
+<button type="button" class="prompt-sample" data-prompt-target="prompt-sample" aria-controls="prompt-sample" disabled><i aria-hidden="true"></i>Пример</button>
+<button type="button" class="prompt-check" data-prompt-target="prompt-check" aria-controls="prompt-check" disabled><i aria-hidden="true"></i>Ограничения и проверка</button>
+<button type="button" class="prompt-questions" data-prompt-target="prompt-questions" aria-controls="prompt-questions" disabled><i aria-hidden="true"></i>Уточнения</button>
+</div>
+<footer><span>АГЕНТ НА ВАШЕЙ ЗАДАЧЕ</span><span>03.11.2026 · НПП АС</span></footer>
+</section>
+<section class="slide" id="engineering-evolution" data-title="От промпта к рабочей среде агента" aria-labelledby="title-engineering-evolution" hidden>
+<header><span class="logo">ai_sprint<span>.</span></span><span class="eyebrow">02 / КАК СФОРМУЛИРОВАТЬ ЗАДАЧУ</span><span class="page">10 / 23</span></header>
+<h2 id="title-engineering-evolution">От промпта к рабочей среде агента</h2>
+<div class="engineering-approaches">
+<article><span class="micro">01 · ЗАПРОС</span><p class="term-definition"><strong>Промпт-инжиниринг</strong> — формулирование задачи, условий, примеров и желаемого результата.</p></article>
+<article><span class="micro">02 · МАТЕРИАЛЫ</span><p class="term-definition"><strong>Контекст-инжиниринг</strong> — отбор и обновление инструкций, документов, истории и памяти для текущего шага.</p></article>
+<article><span class="micro">03 · СРЕДА</span><p class="term-definition"><strong>Харнес-инжиниринг</strong> — проектирование среды агента: контекста, инструментов, цикла и проверок.</p></article>
+</div>
+<div class="engineering-details"><div><strong>Современные модели</strong><p>Уже настроены работать с обычными запросами; некоторые клиенты помогают уточнить промпт.</p></div><div><strong>Память клиента</strong><p>Может добавлять сведения о пользователе в контекст нового обращения. Веса модели от этого не меняются.</p></div></div>
+<p class="engineering-takeaway">Специальные приёмы нужны реже. Ясную постановку задачи и проверку результата теперь закрепляют в скиллах.</p>
+<p class="footnote">Память и её доступность зависят от клиента и настроек.</p>
+<footer><span>АГЕНТ НА ВАШЕЙ ЗАДАЧЕ</span><span>03.11.2026 · НПП АС</span></footer>
+</section>
+<section class="slide night" id="action" data-title="Сформулируйте свою задачу" aria-labelledby="title-action" hidden>
+<header><span class="logo">ai_sprint<span>.</span></span><span class="eyebrow">02 / КАК СФОРМУЛИРОВАТЬ ЗАДАЧУ</span><span class="page">11 / 23</span></header>
+<h2 id="title-action">Сформулируйте свою задачу</h2>
+<div class="assignment">
+<div><span class="assignment-no">01</span><h3>Выберите задачу</h3><p>Небольшая рабочая задача.<br>Если своей нет: сравнить две версии инструкции для коллеги.</p></div>
+<div><span class="assignment-no">02</span><h3>Напишите промпт</h3><p>Задача и роль, адресат, источники, формат и пример. Ограничения, проверка и уточняющие вопросы.</p></div>
+<div><span class="assignment-no">03</span><h3>Проверьте себя</h3><p>Понятно, что сделать?<br>Где взять данные?<br>Как принять результат?<br>Что нужно уточнить?</p></div>
+</div>
+<p class="prompt-practice-result">Отправьте один промпт в чат без рабочих данных. Вместе уточним один пример.</p>
+<footer><span>АГЕНТ НА ВАШЕЙ ЗАДАЧЕ</span><span>03.11.2026 · НПП АС</span></footer>
+</section>
+<section class="slide agent-part " id="agent-anatomy" data-title="Агент: модель и рабочая среда" aria-labelledby="title-agent-anatomy" hidden>
+<header><span class="logo">ai_sprint<span>.</span></span><span class="eyebrow">03 / КАК ДЕЙСТВУЕТ АГЕНТ</span><span class="page">12 / 23</span></header>
+<h2 id="title-agent-anatomy">Агент: модель и рабочая среда</h2>
+<div class="agent-anatomy-layout"><div class="agent-anatomy-copy">
+<p class="term-definition"><strong>Модель</strong> — выбирает следующий шаг: ответить или запросить инструмент.</p>
+<p class="term-definition"><strong>Харнес</strong> — программа вокруг модели. Хранит контекст, ведёт цикл и управляет выполнением.</p>
+<p class="term-definition"><strong>Инструмент</strong> — операция с определёнными входом и результатом: прочитать файл, запустить команду.</p>
+</div><figure class="agent-architecture-art"><img src="assets/illustrations/agent-architecture.png" alt="Поручение входит в харнес. Внутри находятся контекст, модель и инструменты. Модель запрашивает вызов и получает результат. Расширения: скиллы и команды, хуки и проверки, сабагенты."></figure></div>
+<footer><span>АГЕНТ НА ВАШЕЙ ЗАДАЧЕ</span><span>03.11.2026 · НПП АС</span></footer>
+</section>
+<section class="slide agent-part " id="agent-loop-code" data-title="Весь принцип помещается в while" aria-labelledby="title-agent-loop-code" hidden>
+<header><span class="logo">ai_sprint<span>.</span></span><span class="eyebrow">03 / КАК ДЕЙСТВУЕТ АГЕНТ</span><span class="page">13 / 23</span></header>
+<h2 id="title-agent-loop-code">Весь принцип помещается в while</h2>
+<div class="agent-split code-split"><pre class="agent-code"><code>while True:
+    response = model(messages, tools)
+    messages.append(response)
+
+    if not response.tool_calls:
+        break
+
+    for call in response.tool_calls:
+        result = execute(call)
+        messages.append(tool_result(call.id, result))</code></pre><div class="code-guide"><div><span>МОДЕЛЬ</span><p>Выбирает вызов<br>или готовит ответ</p></div><div><span>ХАРНЕС</span><p>Ведёт историю,<br>вызывает инструмент</p></div><div><span>ИНСТРУМЕНТ</span><p>Получает аргументы,<br>возвращает результат</p></div></div></div><p class="footnote">Псевдокод цикла · <a href="https://github.com/shareAI-lab/learn-claude-code/tree/main/s01_agent_loop">learn-claude-code · s01</a>.</p>
+<footer><span>АГЕНТ НА ВАШЕЙ ЗАДАЧЕ</span><span>03.11.2026 · НПП АС</span></footer>
+</section>
+<section class="slide agent-part " id="tool-contract" data-title="Запрос, выполнение и результат" aria-labelledby="title-tool-contract" hidden>
+<header><span class="logo">ai_sprint<span>.</span></span><span class="eyebrow">03 / КАК ДЕЙСТВУЕТ АГЕНТ</span><span class="page">14 / 23</span></header>
+<h2 id="title-tool-contract">Запрос, выполнение и результат</h2>
+<div class="tool-contract-cards"><article><p class="term-definition"><strong>Function calling</strong> — запрос модели на вызов инструмента с аргументами.</p><pre class="agent-code"><code>{&quot;name&quot;: &quot;read_file&quot;,
+ &quot;arguments&quot;: {
+   &quot;path&quot;: &quot;inputs/faq.md&quot;
+ }}</code></pre></article><article><p class="term-definition"><strong>Tool use</strong> — работа с инструментами: запрос модели, выполнение средой и возврат результата.</p><pre class="agent-code"><code>text = read_file(
+    &quot;inputs/faq.md&quot;
+)</code></pre></article><article><p class="term-definition"><strong>Structured output</strong> — вывод по заданной схеме: поля, типы и обязательные значения.</p><pre class="agent-code"><code>{&quot;days&quot;: 45,
+ &quot;unit&quot;: &quot;calendar_days&quot;,
+ &quot;source&quot;: &quot;inputs/faq.md&quot;}</code></pre></article></div>
+<footer><span>АГЕНТ НА ВАШЕЙ ЗАДАЧЕ</span><span>03.11.2026 · НПП АС</span></footer>
+</section>
+<section class="slide agent-part " id="commands-skills" data-title="Какие инструменты дать агенту" aria-labelledby="title-commands-skills" hidden>
+<header><span class="logo">ai_sprint<span>.</span></span><span class="eyebrow">03 / КАК ДЕЙСТВУЕТ АГЕНТ</span><span class="page">15 / 23</span></header>
+<h2 id="title-commands-skills">Какие инструменты дать агенту</h2>
+<div class="tool-options"><article><h3>Конкретные функции харнеса</h3><p>Харнес предоставляет конкретные функции. Хороший тон: каждой задаче — свой инструмент с понятными входом и результатом.</p><pre><code>find_quote(query, documents)</code></pre></article><article><h3>Универсальный инструмент — оболочка</h3><p>Модель пишет скрипты, а харнес запускает их через командную оболочку — в пределах доступных программ и прав.</p><pre><code>python extract_quotes.py inputs/</code></pre></article></div>
+<div class="file-toolset"><h3>Типовой набор для работы с файлами</h3><table><thead><tr><th scope="col">Операция</th><th scope="col">Claude Code</th></tr></thead><tbody><tr><td>Список и поиск файлов</td><td><code>Glob</code></td></tr><tr><td>Чтение</td><td><code>Read</code></td></tr><tr><td>Запись и правка</td><td><code>Write</code> · <code>Edit</code></td></tr><tr><td>Поиск по содержимому</td><td><code>Grep</code></td></tr><tr><td>Командная оболочка</td><td><code>Bash</code></td></tr></tbody></table></div>
+<footer><span>АГЕНТ НА ВАШЕЙ ЗАДАЧЕ</span><span>03.11.2026 · НПП АС</span></footer>
+</section>
+<section class="slide agent-part " id="hooks-subagents" data-title="Хуки: обработчики событий" aria-labelledby="title-hooks-subagents" hidden>
+<header><span class="logo">ai_sprint<span>.</span></span><span class="eyebrow">03 / КАК ДЕЙСТВУЕТ АГЕНТ</span><span class="page">16 / 23</span></header>
+<h2 id="title-hooks-subagents">Хуки: обработчики событий</h2>
+<p class="term-definition"><strong>Хук</strong> — обработчик, который харнес запускает при заданном событии.</p>
+<table class="hook-events"><thead><tr><th scope="col">Событие Claude Code</th><th scope="col">Когда срабатывает</th><th scope="col">Зачем подключить</th></tr></thead><tbody>
+<tr><td><code>SessionStart</code></td><td>Начало или возобновление сессии</td><td>Загрузить актуальное состояние задачи</td></tr>
+<tr><td><code>PreToolUse</code></td><td>Перед выполнением инструмента</td><td>Проверить аргументы, запретить запись в исходники</td></tr>
+<tr><td><code>PostToolUse</code></td><td>После успешного выполнения инструмента</td><td>После правки запустить форматирование или проверку</td></tr>
+<tr><td><code>Stop</code></td><td>Агент собирается закончить ответ</td><td>Проверить результат и вернуть замечание, если он неполон</td></tr>
+</tbody></table>
+<footer><span>АГЕНТ НА ВАШЕЙ ЗАДАЧЕ</span><span>03.11.2026 · НПП АС</span></footer>
+</section>
+<section class="slide agent-part " id="subagents" data-title="Сабагенты: разделить работу и контекст" aria-labelledby="title-subagents" hidden>
+<header><span class="logo">ai_sprint<span>.</span></span><span class="eyebrow">03 / КАК ДЕЙСТВУЕТ АГЕНТ</span><span class="page">17 / 23</span></header>
+<h2 id="title-subagents">Сабагенты: разделить работу и контекст</h2>
+<p class="term-definition"><strong>Сабагент</strong> — отдельный агент для подзадачи со своим контекстом, инструкциями и инструментами.</p>
+<div class="subagent-benefits"><article><span class="micro">КОНТЕКСТ</span><h3>Меньше лишнего<br>в каждом окне</h3><p>Основной агент получает краткий итог вместо всех документов и логов.</p><p>Сабагенту передают только контекст его подзадачи.</p></article><article><span class="micro">ПАРАЛЛЕЛЬНОСТЬ</span><h3>Независимые задачи<br>одновременно</h3><p>Один ищет цитаты, другой сверяет числа, третий проверяет условия.</p><p>Основной агент собирает результаты.</p></article><article><span class="micro">СПЕЦИАЛИЗАЦИЯ</span><h3>Свой промпт<br>под каждую задачу</h3><p>Отдельные инструкции, критерии ответа и доступные инструменты.</p><p>Например: «Проверь только точность цитат. Верни расхождения и источники».</p></article></div>
+<footer><span>АГЕНТ НА ВАШЕЙ ЗАДАЧЕ</span><span>03.11.2026 · НПП АС</span></footer>
+</section>
+<section class="slide agent-part " id="skills-scripts" data-title="Скилл задаёт порядок. Скрипт выполняет операцию." aria-labelledby="title-skills-scripts" hidden>
+<header><span class="logo">ai_sprint<span>.</span></span><span class="eyebrow">04 / СКИЛЛЫ В РАБОТЕ</span><span class="page">18 / 23</span></header>
+<h2 id="title-skills-scripts">Скилл задаёт порядок. Скрипт выполняет операцию.</h2>
+<div class="skill-layout"><div class="skill-definitions"><p class="term-definition"><strong>Скилл</strong> — инструкция и материалы для повторяемого способа работы агента.</p><p class="term-definition"><strong>Скрипт</strong> — программа в файле для выполнения конкретной операции.</p><p>Агент читает скилл, выбирает действия и вызывает доступные инструменты.</p></div><div class="skill-files"><span class="micro">ПАПКА СКИЛЛА</span><pre class="agent-code">study/
+├── SKILL.md
+├── scripts/     <span class="code-muted"># optional</span>
+└── references/  <span class="code-muted"># optional</span></pre><p><code>SKILL.md</code> — как проверить знания.<br>Скрипт — например, извлечь текст PDF.</p></div></div><p class="bottom-line">В нашем study достаточно инструкции, учебного текста и файловых инструментов.</p>
+<footer><span>АГЕНТ НА ВАШЕЙ ЗАДАЧЕ</span><span>03.11.2026 · НПП АС</span></footer>
+</section>
+<section class="slide agent-part night" id="demo-setup" data-title="Study: проверьте понимание лекции" aria-labelledby="title-demo-setup" hidden>
+<header><span class="logo">ai_sprint<span>.</span></span><span class="eyebrow">04 / СКИЛЛЫ В РАБОТЕ</span><span class="page">19 / 23</span></header>
+<h2 id="title-demo-setup">Study: проверьте понимание лекции</h2>
+<p class="deck-lead">Скилл задаёт вопросы по прочитанному, разбирает ответы по источнику и сохраняет отчёт. Проверьте себя по материалу этой лекции.</p><p class="student-repo-link"><a href="../../README.md">Материалы курса ↗</a></p><pre class="agent-code study-command">/study exercises/01-study/materials/lecture-01.md</pre><div class="student-assignment"><article><span class="micro">ИСХОДНИК</span><h3>Текст лекции</h3><p>Модель и контекст.<br>Устройство агента.<br>Инструменты и скиллы.</p></article><article><span class="micro">ДИАЛОГ</span><h3>Один вопрос за раз</h3><p>Сначала ваш ответ.<br>Затем разбор<br>с опорой на текст.</p></article><article><span class="micro">РЕЗУЛЬТАТ</span><h3>Отчёт в файле</h3><p>Что поняли.<br>Где есть пробел.<br>Что перечитать.</p></article></div>
+<footer><span>АГЕНТ НА ВАШЕЙ ЗАДАЧЕ</span><span>03.11.2026 · НПП АС</span></footer>
+</section>
+<section class="slide agent-part " id="duplicate-task" data-title="Сделаем приложение для поиска дубликатов" aria-labelledby="title-duplicate-task" hidden>
+<header><span class="logo">ai_sprint<span>.</span></span><span class="eyebrow">05 / СОЗДАЁМ ИНСТРУМЕНТ</span><span class="page">20 / 23</span></header>
+<h2 id="title-duplicate-task">Сделаем приложение для поиска дубликатов</h2>
+<p class="deck-lead">Выбираю папку. Вижу одинаковые файлы и сколько места занимают лишние копии.</p>
+<div class="assignment"><div><span class="assignment-no">01</span><h3>Выбрать папку</h3><p>Файлы и подпапки.<br>Документы и копии.<br>Разные имена.</p></div><div><span class="assignment-no">02</span><h3>Найти совпадения</h3><p>Сравнить содержимое.<br>Собрать группы.<br>Показать пути.</p></div><div><span class="assignment-no">03</span><h3>Увидеть результат</h3><p>Открыть приложение.<br>Посчитать лишние копии.<br>Проверить находки.</p></div></div>
+<p class="bottom-line">Поручаем агенту создать приложение, запустить его и проверить результат.</p>
+<p class="student-repo-link"><a href="../../exercises/02-duplicate-finder/README.md">Задание · exercises/02-duplicate-finder ↗</a></p>
+<footer><span>АГЕНТ НА ВАШЕЙ ЗАДАЧЕ</span><span>03.11.2026 · НПП АС</span></footer>
+</section>
+<section class="slide agent-part " id="duplicate-check" data-title="Одинаковое имя ещё не означает дубль" aria-labelledby="title-duplicate-check" hidden>
+<header><span class="logo">ai_sprint<span>.</span></span><span class="eyebrow">05 / СОЗДАЁМ ИНСТРУМЕНТ</span><span class="page">21 / 23</span></header>
+<h2 id="title-duplicate-check">Одинаковое имя ещё не означает дубль</h2>
+<p class="deck-lead">Предскажите результат, затем проверим приложение на файлах.</p>
+<div class="agent-cards three"><article><span class="micro">СЛУЧАЙ 1</span><h3>Имена разные</h3><p>Содержимое одинаковое.<br>Ожидаем одну группу<br>со всеми копиями.</p></article><article><span class="micro">СЛУЧАЙ 2</span><h3>Имя и размер совпали</h3><p>Содержимое разное.<br>Такие файлы<br>не должны стать дублями.</p></article><article><span class="micro">СЛУЧАЙ 3</span><h3>Добавили копию</h3><p>Запускаем поиск снова.<br>Группа увеличилась.<br>Итог пересчитан.</p></article></div>
+<p class="bottom-line">Лишние копии: оставляем по одному файлу в группе, считаем размер остальных.</p>
+<footer><span>АГЕНТ НА ВАШЕЙ ЗАДАЧЕ</span><span>03.11.2026 · НПП АС</span></footer>
+</section>
+<section class="slide agent-part" id="azret-workflow" data-title="Воркфлоу работы с агентом" aria-labelledby="title-azret-workflow" hidden>
+<header><span class="logo">ai_sprint<span>.</span></span><span class="eyebrow">МОЙ РАБОЧИЙ ПРОЦЕСС</span><span class="page">22 / 23</span></header>
+<h2 id="title-azret-workflow">Воркфлоу работы с агентом</h2>
+<p class="deck-lead">От обсуждения задачи до работающего приложения — через четыре скилла.</p>
+<div class="agent-cards azret-workflow"><article><span class="micro">01 · ОБСУДИТЬ ЗАДАЧУ</span><h3>/feature-discovery</h3><p>Уточняю, что нужно и зачем.<br>Результат: требования и технические факты.</p></article><article><span class="micro">02 · ОФОРМИТЬ СПЕЦИФИКАЦИЮ</span><h3>/create-prd</h3><p>Собираю требования в PRD.<br>Результат: описание того, что строим.</p></article><article><span class="micro">03 · РАЗБИТЬ НА ЗАДАЧИ</span><h3>/prd-to-beads</h3><p>Проверяю декомпозицию по PRD.<br>Результат: задачи в Beads после ревью.</p></article><article><span class="micro">04 · РЕАЛИЗОВАТЬ И ПРОВЕРИТЬ</span><h3>/senior-developer</h3><p>Реализую задачи с тестами.<br>Результат: работающий инструмент.</p></article></div>
+<p class="bottom-line">Покажу этот путь на своём решении задачи поиска дубликатов.</p>
+<footer><span>АГЕНТ НА ВАШЕЙ ЗАДАЧЕ</span><span>03.11.2026 · НПП АС</span></footer>
+</section>
+<section class="slide agent-part night" id="remember" data-title="С какой задачей вы придёте в четверг?" aria-labelledby="title-remember" hidden>
+<header><span class="logo">ai_sprint<span>.</span></span><span class="eyebrow">К ТРЕКИНГУ В ЧЕТВЕРГ</span><span class="page">23 / 23</span></header>
+<h2 id="title-remember">С какой задачей вы придёте в четверг?</h2>
+<p class="deck-lead">5 ноября встретимся, чтобы разобрать ваши попытки. Какую задачу вы хотите взять из своей работы?</p>
+<div class="student-assignment"><article><span class="micro">ЗАДАЧА</span><h3>Где вам нужна помощь?</h3><p>Что сейчас отнимает время<br>или вызывает затруднения?</p></article><article><span class="micro">ПОПЫТКА</span><h3>Что поручите агенту?</h3><p>С какого шага начнёте?<br>Что дадите ему для работы?</p></article><article><span class="micro">РЕЗУЛЬТАТ</span><h3>Как поймёте, что получилось?</h3><p>Что сможете проверить сами?<br>Что захотите разобрать вместе?</p></article></div>
+<p class="bottom-line">Что пока мешает сделать первую попытку?</p>
+<footer><span>АГЕНТ НА ВАШЕЙ ЗАДАЧЕ</span><span>ЧЕТВЕРГ · 05.11.2026 · 14:00 МСК</span></footer>
+</section>
+</main>
+  <nav class="controls" aria-label="Управление презентацией"><button id="previous" aria-label="Предыдущий слайд" title="Назад (←)">←</button><button id="overview-open" title="Все слайды (O)"><span id="counter">01 / 23</span><span class="control-label">Слайды</span></button><button id="next" aria-label="Следующий слайд" title="Дальше (→ / Пробел)">→</button><span class="control-divider"></span><button id="fullscreen" title="Полный экран (F)">Экран <kbd>F</kbd></button></nav>
+  <div id="progress" aria-hidden="true"></div>
+  <p id="announcement" class="sr-only" aria-live="polite"></p>
+  <dialog id="overview" aria-labelledby="overview-title"><div class="overview-header"><h2 id="overview-title">Первая лекция: слайды</h2><button id="overview-close" aria-label="Закрыть список слайдов">×</button></div><ol id="slide-list"></ol><p>← → / Пробел — переход · Home / End — начало / конец · F — полный экран</p></dialog>
+  <noscript><p class="no-script">JavaScript отключён: все слайды показаны последовательно. Включите JavaScript для режима презентации.</p><style>.slide[hidden]{display:flex!important}body{overflow:auto}#deck{display:block;height:auto}.slide{position:relative;width:1600px;height:900px;transform:none!important}.controls{display:none}</style></noscript>
+</body>
+</html>
