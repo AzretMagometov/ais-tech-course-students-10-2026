@@ -10,8 +10,8 @@ Claude Code обнаруживает их в `.claude/skills/`, Codex — в `.a
 
 | Навык | Что делает | Результат |
 |---|---|---|
-| [feature-discovery](../.claude/skills/feature-discovery/SKILL.md) | Обсуждает задачу и собирает требования | `notes.md` и `tech.md` |
-| [create-prd](../.claude/skills/create-prd/SKILL.md) | Оформляет требования в спецификацию | `prd.md` и запись SPEC в проектном `CLAUDE.md` |
+| [feature-discovery](../.claude/skills/feature-discovery/SKILL.md) | Выясняет концепт, поведение и известные ограничения | `notes.md` и `tech.md` |
+| [create-prd](../.claude/skills/create-prd/SKILL.md) | Проводит короткое обсуждение технических вариантов и оформляет спецификацию | `prd.md`, при необходимости ADR и запись SPEC в проектном `CLAUDE.md` |
 | [prd-to-beads](../.claude/skills/prd-to-beads/SKILL.md) | Готовит декомпозицию, затем переносит проверенные задачи в Beads | `tasks.md`, после ревью — задачи трекера |
 | [senior-developer](../.claude/skills/senior-developer/SKILL.md) | Реализует одну назначенную задачу через тесты и проверки | Работающий и проверенный результат |
 
