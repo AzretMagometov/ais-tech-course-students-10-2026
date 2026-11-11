@@ -1,0 +1,229 @@
+<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Контекст, память и задачи — AI Sprint</title><link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="lecture.css"><script src="deck.js" defer></script></head><body><main id="deck" aria-label="Вторая лекция: контекст, память и задачи">
+<section class="slide" id="start" data-title="Контекст, память и задачи" data-owner="Азрет" aria-labelledby="title-start">
+<header><span class="logo">ai_sprint<span>.</span></span><span class="eyebrow">ЛЕКЦИЯ 02</span><span class="page">1 / 24</span></header>
+<div class="title-layout"><p class="kicker">AI SPRINT · НЕДЕЛЯ 2</p><h2 id="title-start">Контекст, память<br>и задачи</h2><p class="intro">Азрет Магометов<br>10 ноября 2026, 14:00 МСК</p></div>
+<footer><span>КОНТЕКСТ, ПАМЯТЬ И ЗАДАЧИ</span><span>10.11.2026 · НПП АС</span></footer><aside class="notes">Четыре темы помогают организовать работу между сессиями. Подробный текст и упражнения доступны через README этой папки.</aside></section>
+<section class="slide" id="contents" data-title="Содержание" data-owner="Азрет" aria-labelledby="title-contents" hidden>
+<header><span class="logo">ai_sprint<span>.</span></span><span class="eyebrow">ЛЕКЦИЯ 02</span><span class="page">2 / 24</span></header>
+<h2 id="title-contents">Содержание</h2>
+<div class="contents">
+<article><span class="contents-no">01</span><h3>Контекст</h3><p>Из чего состоит контекст. Как добавить файл. Команды управления контекстом и сессией.</p></article>
+<article><span class="contents-no">02</span><h3>Память</h3><p>Файлы CLAUDE.md и автоматическая память. Личные и общие правила. Журнал решений. Как писать инструкции.</p></article>
+<article><span class="contents-no">03</span><h3>Задачи и план</h3><p>Режим планирования. План в файле. Трекеры задач: Beads, GitHub Issues.</p></article>
+<article><span class="contents-no">04</span><h3>Состояние</h3><p>Запрос состояния проекта: изменения, сборка, тесты, задачи, фоновые процессы.</p></article>
+</div>
+<p class="bottom-line">После каждой темы — практика в Claude Code.</p>
+<footer><span>КОНТЕКСТ, ПАМЯТЬ И ЗАДАЧИ</span><span>10.11.2026 · НПП АС</span></footer><aside class="notes">Читайте текст лекции по одному разделу, затем повторяйте соответствующую практику. Результаты сохраняйте в своей локальной копии.</aside></section>
+<section class="slide" id="context" data-title="Что такое контекст" data-owner="Азрет" aria-labelledby="title-context" hidden>
+<header><span class="logo">ai_sprint<span>.</span></span><span class="eyebrow">01 / КОНТЕКСТ</span><span class="page">3 / 24</span></header>
+<h2 id="title-context">Что такое контекст</h2>
+<p class="term-definition"><strong>Контекст</strong> — всё, что модель получает в одном обращении: инструкции, история разговора, результаты инструментов.</p>
+<p class="term-definition"><strong>Контекстное окно</strong> — предельный объём контекста в токенах. Зависит от модели.</p>
+<div class="context-stack">
+<div><b>Системный промпт и инструменты</b><span>Задаёт клиент. Описывает агенту доступные инструменты.</span></div>
+<div><b>CLAUDE.md и память</b><span>Загружаются при старте сессии.</span></div>
+<div><b>Разговор</b><span>Ваши сообщения и ответы агента.</span></div>
+<div><b>Результаты инструментов</b><span>Прочитанные файлы, вывод команд, результаты поиска.</span></div>
+</div>
+<p class="bottom-line"><code>/context</code> показывает, сколько места занимает каждая часть.</p>
+<footer><span>КОНТЕКСТ, ПАМЯТЬ И ЗАДАЧИ</span><span>10.11.2026 · НПП АС</span></footer><aside class="notes">Папка на диске и текущий контекст различаются. Проверяйте чтение нужного файла по действиям агента и сверяйте ответ с источником.</aside></section>
+<section class="slide" id="file-to-context" data-title="Как файл попадает в контекст" data-owner="Азрет" aria-labelledby="title-file-to-context" hidden>
+<header><span class="logo">ai_sprint<span>.</span></span><span class="eyebrow">01 / КОНТЕКСТ</span><span class="page">4 / 24</span></header>
+<h2 id="title-file-to-context">Как файл попадает в контекст</h2>
+<p class="deck-lead">Файл на диске не входит в контекст, пока его не прочитали.</p>
+<div class="cards three">
+<article class="card"><span class="micro">ИНСТРУМЕНТЫ</span><h3>Агент читает сам</h3><p>Находит файл поиском и читает инструментом. Каждое чтение видно в ленте действий.</p></article><article class="card"><span class="micro">@-УПОМИНАНИЕ</span><h3>Вы указываете файл</h3><p><code>@docs/spec.md</code> вставляет содержимое файла в сообщение.</p><p><code>@src/</code> даёт список файлов папки без содержимого.</p></article><article class="card"><span class="micro">СТАРТ СЕССИИ</span><h3>Клиент загружает при старте</h3><p>CLAUDE.md из папки проекта и родительских папок, начало MEMORY.md.</p></article>
+</div>
+<p class="footnote">Файл вставляется целиком, если он меньше 25 000 токенов. Текстовый файл больше 256 КБ не вставляется. Текст и скриншоты можно вставить прямо в сообщение.</p>
+<footer><span>КОНТЕКСТ, ПАМЯТЬ И ЗАДАЧИ</span><span>10.11.2026 · НПП АС</span></footer><aside class="notes">Укажите известный файл сами или поручите агенту найти его. Упоминание папки не означает чтение всех её файлов.</aside></section>
+<section class="slide" id="long-session" data-title="Длинная сессия" data-owner="Азрет" aria-labelledby="title-long-session" hidden>
+<header><span class="logo">ai_sprint<span>.</span></span><span class="eyebrow">01 / КОНТЕКСТ</span><span class="page">5 / 24</span></header>
+<h2 id="title-long-session">Длинная сессия</h2>
+<div class="cards two">
+<article class="card"><h3>Что происходит</h3><ul><li>Сообщения и прочитанные файлы остаются в истории.</li><li>В длинной истории агент может хуже соблюдать ранние инструкции.</li><li>У предела окна клиент сжимает историю в сводку. Часть деталей теряется.</li></ul></article><article class="card"><h3>Что делать</h3><ul><li>Одна сессия — одна задача.</li><li>Перед новой задачей — <code>/clear</code>.</li><li>Итоги, нужные дальше, — в файл.</li><li>Большие документы — по нужным разделам.</li></ul></article>
+</div>
+<p class="bottom-line">Эмпирический ориентир для рабочей задачи: 40–60% контекстного окна.</p>
+<p class="footnote">По опыту HumanLayer при работе с кодом. Зависит от сложности задачи; универсального порога нет.</p>
+<footer><span>КОНТЕКСТ, ПАМЯТЬ И ЗАДАЧИ</span><span>10.11.2026 · НПП АС</span></footer><aside class="notes">40–60% — ориентир из практики HumanLayer, зависящий от сложности задачи. Это не универсальный порог ухудшения. При окне 200 тысяч токенов диапазон соответствует 80–120 тысячам. Источник: https://www.humanlayer.dev/blog/advanced-context-engineering.</aside></section>
+<section class="slide" id="context-commands" data-title="Команды: контекст" data-owner="Азрет" aria-labelledby="title-context-commands" hidden>
+<header><span class="logo">ai_sprint<span>.</span></span><span class="eyebrow">01 / КОНТЕКСТ</span><span class="page">6 / 24</span></header>
+<h2 id="title-context-commands">Команды: контекст</h2>
+<table class="lesson-table commands"><thead><tr><th>Команда</th><th>Что делает</th><th>Когда</th></tr></thead><tbody><tr><td><code>/context</code></td><td>Показывает заполнение окна по частям</td><td>Понять, что занимает место</td></tr><tr><td><code>/clear</code></td><td>Начинает разговор с пустой историей. Правила проекта остаются</td><td>Перед новой задачей</td></tr><tr><td><code>/compact</code> [что сохранить]</td><td>Заменяет историю сводкой. В аргументе можно указать, что оставить</td><td>Задача не закончена, окно заполнено</td></tr><tr><td><code>/btw</code> вопрос</td><td>Отвечает на побочный вопрос, не добавляя его в историю</td><td>Уточнить мелочь по ходу работы</td></tr></tbody></table>
+<p class="footnote">Команды по документации Claude Code, ноябрь 2026. В Desktop и других клиентах набор может отличаться.</p>
+<footer><span>КОНТЕКСТ, ПАМЯТЬ И ЗАДАЧИ</span><span>10.11.2026 · НПП АС</span></footer><aside class="notes">Перед очисткой или сжатием сохраните нужное в файл. После изменения контекста сверьте ограничения и следующий шаг.</aside></section>
+<section class="slide" id="session-commands" data-title="Команды: сессия" data-owner="Азрет" aria-labelledby="title-session-commands" hidden>
+<header><span class="logo">ai_sprint<span>.</span></span><span class="eyebrow">01 / КОНТЕКСТ</span><span class="page">7 / 24</span></header>
+<h2 id="title-session-commands">Команды: сессия</h2>
+<table class="lesson-table commands"><thead><tr><th>Команда</th><th>Что делает</th><th>Когда</th></tr></thead><tbody><tr><td><code>Esc Esc</code>, <code>/rewind</code></td><td>Открывает прошлые сообщения. Откатывает разговор, изменения файлов или оба</td><td>Агент ушёл не туда</td></tr><tr><td><code>/branch</code> [имя]</td><td>Создаёт копию разговора и переключает в неё. Исходный открывается через <code>/resume</code></td><td>Попробовать другой вариант</td></tr><tr><td><code>/fork</code> [запрос]</td><td>Копирует разговор в новую фоновую сессию. Вы остаётесь в текущей</td><td>Параллельная ветка работы</td></tr><tr><td><code>/resume</code>, <code>/rename</code></td><td>Возвращает прошлую сессию. Даёт сессии имя</td><td>Продолжить вчерашнюю работу</td></tr></tbody></table>
+<p class="footnote">Откат возвращает правки, сделанные инструментами редактирования агента. Изменения через терминал и правки вне агента не откатываются. Откат не заменяет Git. <code>Esc Esc</code> описан для терминала; в документации Desktop его нет.</p>
+<footer><span>КОНТЕКСТ, ПАМЯТЬ И ЗАДАЧИ</span><span>10.11.2026 · НПП АС</span></footer><aside class="notes">Остановка не отменяет уже выполненные действия. Откат не охватывает все изменения и не заменяет Git. Ветвление разговора не создаёт отдельную копию рабочих файлов.</aside></section>
+<section class="slide night practice" id="practice-context" data-title="Практика: контекст" data-owner="Азрет" aria-labelledby="title-practice-context" hidden>
+<header><span class="logo">ai_sprint<span>.</span></span><span class="eyebrow">ПРАКТИКА 01 / КОНТЕКСТ</span><span class="page">8 / 24</span></header>
+<h2 id="title-practice-context">Практика: контекст</h2>
+<p class="deck-lead">Повторяйте у себя в Claude Code, в папке студенческого репозитория.</p>
+<table class="lesson-table practice-table"><thead><tr><th>Ситуация</th><th>Действие</th></tr></thead><tbody><tr><td>Начали сессию. Что видит агент?</td><td><code>/context</code></td></tr><tr><td>Нужный файл известен</td><td><code>@файл</code> и вопрос по файлу, затем снова <code>/context</code></td></tr><tr><td>Мелкий вопрос по ходу работы</td><td><code>/btw</code> вопрос. В Desktop также <code>Cmd+;</code> или <code>Ctrl+;</code></td></tr><tr><td>Агент пошёл не туда</td><td><code>Esc</code> — остановить. В терминале <code>Esc Esc</code> — откатить</td></tr><tr><td>Задача не закончена, окно заполнено</td><td><code>/compact</code> что сохранить</td></tr><tr><td>Переходите к другой задаче</td><td>В терминале <code>/rename</code>, затем <code>/clear</code>. Вернуться — <code>/resume</code></td></tr></tbody></table>
+<footer><span>КОНТЕКСТ, ПАМЯТЬ И ЗАДАЧИ</span><span>10.11.2026 · НПП АС</span></footer><aside class="notes">Практика 1 находится в exercises/03-context-and-plan/README.md от корня курса. Команды вводят в диалоге Claude Code. В короткой сессии сжатие может быть недоступно.</aside></section>
+<section class="slide" id="memory" data-title="Что такое память" data-owner="Азрет" aria-labelledby="title-memory" hidden>
+<header><span class="logo">ai_sprint<span>.</span></span><span class="eyebrow">02 / ПАМЯТЬ</span><span class="page">9 / 24</span></header>
+<h2 id="title-memory">Что такое память</h2>
+<p class="term-definition"><strong>Память</strong> — сведения, сохранённые в файлах между сессиями. В работу они попадают только через контекст.</p>
+<div class="cards two">
+<article class="card"><h3>Загружается при старте</h3><ul><li><code>~/.claude/CLAUDE.md</code></li><li><code>CLAUDE.md</code> и <code>CLAUDE.local.md</code> проекта</li><li>Правила <code>.claude/rules/</code> без поля <code>paths</code></li><li>Первые 200 строк или 25 КБ <code>MEMORY.md</code></li></ul></article><article class="card"><h3>Читается по необходимости</h3><ul><li><code>CLAUDE.md</code> во вложенных папках</li><li>Правила с полем <code>paths</code> — при работе с подходящими файлами</li><li>Тематические заметки автоматической памяти</li><li>Документы проекта</li></ul></article>
+</div>
+<p class="bottom-line">Веса модели не меняются. Агент учитывает запись, только когда она попала в контекст.</p>
+<footer><span>КОНТЕКСТ, ПАМЯТЬ И ЗАДАЧИ</span><span>10.11.2026 · НПП АС</span></footer><aside class="notes">Сохранённые сведения влияют на ответ после чтения. Обычный документ проекта нужно явно указать или связать с инструкциями.</aside></section>
+<section class="slide" id="storage" data-title="Где хранятся правила" data-owner="Азрет" aria-labelledby="title-storage" hidden>
+<header><span class="logo">ai_sprint<span>.</span></span><span class="eyebrow">02 / ПАМЯТЬ</span><span class="page">10 / 24</span></header>
+<h2 id="title-storage">Где хранятся правила</h2>
+<table class="lesson-table storage"><thead><tr><th>Файл</th><th>Кто видит</th><th>Что писать</th></tr></thead><tbody><tr><td><code>~/.claude/CLAUDE.md</code></td><td>Только вы, во всех проектах</td><td>Язык ответов, личный стиль работы</td></tr><tr><td><code>CLAUDE.md</code> в корне проекта</td><td>Вся команда через Git</td><td>Сборка, тесты, структура, соглашения</td></tr><tr><td><code>CLAUDE.local.md</code></td><td>Только вы, в этом проекте. Добавить в <code>.gitignore</code></td><td>Локальные пути, свои тестовые данные</td></tr><tr><td><code>.claude/rules/*.md</code></td><td>Вся команда через Git</td><td>Правила для части файлов, например только для <code>*.st</code></td></tr><tr><td><code>~/.claude/projects/&lt;проект&gt;/memory/</code></td><td>Только вы</td><td>Заметки агента: <code>MEMORY.md</code> и тематические файлы</td></tr></tbody></table>
+<p class="footnote">На Windows <code>~</code> — это <code>%USERPROFILE%</code>. Общий файл проекта также может лежать в <code>.claude/CLAUDE.md</code>.</p>
+<footer><span>КОНТЕКСТ, ПАМЯТЬ И ЗАДАЧИ</span><span>10.11.2026 · НПП АС</span></footer><aside class="notes">Выбирайте место по области действия. Личные правила отделяйте от командных. Исключение из Git не удаляет ранее опубликованные файлы из истории.</aside></section>
+<section class="slide" id="auto-memory" data-title="Автоматическая память" data-owner="Азрет" aria-labelledby="title-auto-memory" hidden>
+<header><span class="logo">ai_sprint<span>.</span></span><span class="eyebrow">02 / ПАМЯТЬ</span><span class="page">11 / 24</span></header>
+<h2 id="title-auto-memory">Автоматическая память</h2>
+<p class="deck-lead">Агент сам записывает заметки о проекте: команды сборки, найденные особенности, ваши поправки.</p>
+<div class="cards two">
+<article class="card"><h3>Как посмотреть</h3><p><code>/memory</code> открывает файлы CLAUDE.md и заметки, включает и выключает автоматическую память.</p><p>Спросить агента: «Что ты знаешь обо мне и об этом проекте? Назови файлы, откуда это».</p></article><article class="card"><h3>Как отключить</h3><p>В настройках проекта:</p><pre class="inline-code">&quot;autoMemoryEnabled&quot;: false</pre><p>Или переменная окружения:</p><pre class="inline-code">CLAUDE_CODE_DISABLE_AUTO_MEMORY=1</pre></article>
+</div>
+<p class="bottom-line">Заметки лежат на вашем компьютере и не попадают в Git. Коллега их не увидит.</p>
+<footer><span>КОНТЕКСТ, ПАМЯТЬ И ЗАДАЧИ</span><span>10.11.2026 · НПП АС</span></footer><aside class="notes">Память может содержать устаревшие сведения. Попросите назвать источники и откройте один файл для проверки. Подтверждённые командные решения храните в общих документах.</aside></section>
+<section class="slide" id="decisions" data-title="Журнал решений" data-owner="Азрет" aria-labelledby="title-decisions" hidden>
+<header><span class="logo">ai_sprint<span>.</span></span><span class="eyebrow">02 / ПАМЯТЬ</span><span class="page">12 / 24</span></header>
+<h2 id="title-decisions">Журнал решений</h2>
+<p class="term-definition"><strong>Решение (ADR)</strong> — запись о выборе: что решили, почему и какие варианты отклонили.</p>
+<div class="split">
+<div><span class="micro">DOCS/DECISIONS.MD</span><pre class="agent-code">## 07.11.2026. Время в отчётах — UTC
+Контекст: данные приходят с объектов
+в разных часовых поясах.
+Решение: хранить и выводить UTC,
+пояс показывать в интерфейсе.
+Отклонено: местное время объекта —
+записи нельзя сравнивать между собой.</pre></div>
+<article class="card"><h3>Зачем агенту</h3><ul><li>Не предлагает снова отклонённый вариант.</li><li>Новая сессия знает причину решения.</li><li>Решение можно найти по дате и теме.</li></ul><p>В CLAUDE.md:</p><pre class="inline-code">Перед изменением архитектуры прочитай
+docs/decisions.md. Новое решение
+запиши туда же.</pre></article>
+</div>
+<footer><span>КОНТЕКСТ, ПАМЯТЬ И ЗАДАЧИ</span><span>10.11.2026 · НПП АС</span></footer><aside class="notes">Запись решения объясняет выбор и его причину. Пример на слайде учебный. Образцы документов находятся в examples.md рядом с презентацией.</aside></section>
+<section class="slide" id="instructions" data-title="Как писать инструкции" data-owner="Азрет" aria-labelledby="title-instructions" hidden>
+<header><span class="logo">ai_sprint<span>.</span></span><span class="eyebrow">02 / ПАМЯТЬ</span><span class="page">13 / 24</span></header>
+<h2 id="title-instructions">Как писать инструкции</h2>
+<div class="rules">
+<article class="card"><h3>Коротко</h3><p>До 200 строк на файл. Длинный файл занимает контекст и соблюдается хуже.</p></article><article class="card"><h3>Конкретно</h3><p>«Отступ 2 пробела» вместо «форматируй аккуратно».</p></article><article class="card"><h3>Без противоречий</h3><p>Из двух противоречащих правил агент выберет любое.</p></article><article class="card"><h3>Ошибка → правило</h3><p>Поправили агента второй раз — запишите правило в CLAUDE.md.</p></article><article class="card"><h3>Обязательное — хуком</h3><p>CLAUDE.md — текст в контексте. Запрет, который нельзя нарушить, делают хуком.</p></article><article class="card"><h3>Повторяемое — скиллом</h3><p>Запрос, который вы пишете каждый раз, оформите скиллом или командой.</p></article>
+</div>
+<p class="footnote">Большой файл делят на части: <code>.claude/rules/</code> по темам, подключение файла строкой <code>@путь</code>.</p>
+<footer><span>КОНТЕКСТ, ПАМЯТЬ И ЗАДАЧИ</span><span>10.11.2026 · НПП АС</span></footer><aside class="notes">Пишите наблюдаемые правила. Ограничение до 200 строк для CLAUDE.md — рекомендация по объёму, а не предел чтения. Текстовая инструкция не заменяет техническое ограничение.</aside></section>
+<section class="slide night practice" id="practice-memory" data-title="Практика: память" data-owner="Азрет" aria-labelledby="title-practice-memory" hidden>
+<header><span class="logo">ai_sprint<span>.</span></span><span class="eyebrow">ПРАКТИКА 02 / ПАМЯТЬ</span><span class="page">14 / 24</span></header>
+<h2 id="title-practice-memory">Практика: память</h2>
+<p class="deck-lead">Повторяйте у себя в Claude Code, в папке студенческого репозитория.</p>
+<table class="lesson-table practice-table"><thead><tr><th>Ситуация</th><th>Действие</th></tr></thead><tbody><tr><td>Что агент загрузил при старте</td><td><code>/memory</code></td></tr><tr><td>Где лежат файлы памяти</td><td>Finder: <code>Cmd+Shift+.</code> показывает <code>~/.claude</code>. Проводник: <code>%USERPROFILE%\.claude</code></td></tr><tr><td>Поправили агента второй раз</td><td>Правило в <code>CLAUDE.local.md</code>, файл в <code>.gitignore</code>. Проверка в новой сессии</td></tr><tr><td>Что агент записал сам</td><td>«Что ты знаешь обо мне и об этом проекте? Назови файлы»</td></tr><tr><td>Приняли решение</td><td>Запись в <code>work/decisions.md</code>: решение, причина, отклонённое</td></tr></tbody></table>
+<footer><span>КОНТЕКСТ, ПАМЯТЬ И ЗАДАЧИ</span><span>10.11.2026 · НПП АС</span></footer><aside class="notes">Практика 2 находится в exercises/03-context-and-plan/README.md. Добавьте заметное личное правило, проверьте его загрузку в новой сессии и запишите учебное решение.</aside></section>
+<section class="slide" id="plan-mode" data-title="Режим планирования" data-owner="Азрет" aria-labelledby="title-plan-mode" hidden>
+<header><span class="logo">ai_sprint<span>.</span></span><span class="eyebrow">03 / ЗАДАЧИ И ПЛАН</span><span class="page">15 / 24</span></header>
+<h2 id="title-plan-mode">Режим планирования</h2>
+<p class="term-definition"><strong>Режим планирования</strong> — агент читает файлы и предлагает план. Рабочие файлы не меняются, пока вы не одобрите план.</p>
+<div class="steps">
+<article class="card"><span class="micro">1</span><h3>Включить</h3><p>Терминал: <code>Shift+Tab</code> до «plan mode on» или <code>/plan</code> задача. Desktop: переключатель под полем ввода или <code>Cmd+Shift+M</code>.</p></article><article class="card"><span class="micro">2</span><h3>Проверить</h3><p>Прочитать план. В терминале <code>Ctrl+G</code> открывает его в редакторе для правки.</p></article><article class="card"><span class="micro">3</span><h3>Одобрить</h3><p>Выбрать, подтверждать ли каждую правку. Агент выходит из режима и выполняет план.</p></article>
+</div>
+<p class="footnote">План сохраняется в <code>~/.claude/plans/</code>. Настройка <code>"plansDirectory": "./plans"</code> сохраняет планы в папке проекта.</p>
+<footer><span>КОНТЕКСТ, ПАМЯТЬ И ЗАДАЧИ</span><span>10.11.2026 · НПП АС</span></footer><aside class="notes">Прочитайте план до одобрения. Клиент может сохранять собственный файл плана во время планирования; документ в рабочей папке сохраняйте первым шагом после одобрения.</aside></section>
+<section class="slide" id="task-levels" data-title="Где хранить задачи" data-owner="Азрет" aria-labelledby="title-task-levels" hidden>
+<header><span class="logo">ai_sprint<span>.</span></span><span class="eyebrow">03 / ЗАДАЧИ И ПЛАН</span><span class="page">16 / 24</span></header>
+<h2 id="title-task-levels">Где хранить задачи</h2>
+<table class="lesson-table"><thead><tr><th>Где</th><th>Сколько живёт</th><th>Когда подходит</th></tr></thead><tbody><tr><td>Список задач сессии</td><td>Пока идёт сессия</td><td>Шаги одной задачи</td></tr><tr><td>План в файле <code>.md</code></td><td>В проекте, в Git</td><td>Задача на несколько сессий</td></tr><tr><td>Трекер: Beads, GitHub Issues</td><td>В репозитории или сервисе</td><td>Много задач, зависимости, несколько людей или агентов</td></tr></tbody></table>
+<p class="bottom-line">В терминале список задач сессии показывает <code>Ctrl+T</code>. Агент ведёт его сам и отмечает выполненные шаги.</p>
+<p class="footnote">Общий список для нескольких сессий: одинаковое значение <code>CLAUDE_CODE_TASK_LIST_ID</code> в каждой.</p>
+<footer><span>КОНТЕКСТ, ПАМЯТЬ И ЗАДАЧИ</span><span>10.11.2026 · НПП АС</span></footer><aside class="notes">Выбирайте способ хранения по длительности задачи и числу участников. Список шагов, фоновая работа и карточки трекера — разные сущности.</aside></section>
+<section class="slide" id="plan-file" data-title="План в файле" data-owner="Азрет" aria-labelledby="title-plan-file" hidden>
+<header><span class="logo">ai_sprint<span>.</span></span><span class="eyebrow">03 / ЗАДАЧИ И ПЛАН</span><span class="page">17 / 24</span></header>
+<h2 id="title-plan-file">План в файле</h2>
+<div class="split">
+<div><span class="micro">DOCS/PLANS/REPORT-EXPORT.MD</span><pre class="agent-code"># Экспорт отчёта в CSV
+Готово, когда:
+- тест на пустой отчёт проходит
+- тест на 10 000 строк проходит
+Шаги:
+- [x] Найти формирование отчёта
+- [ ] Добавить экспорт
+- [ ] Написать тесты
+Открыто: разделитель «;» или «,»</pre></div>
+<div class="prompts"><span class="micro">СОХРАНИТЬ</span><pre class="inline-code">Сохрани план в docs/plans/report-export.md:
+критерии готовности, шаги с чекбоксами,
+открытые вопросы. Отмечай выполненные шаги.</pre><span class="micro">ПРОДОЛЖИТЬ В НОВОЙ СЕССИИ</span><pre class="inline-code">Прочитай docs/plans/report-export.md
+и продолжи с первого невыполненного шага.</pre></div>
+</div>
+<footer><span>КОНТЕКСТ, ПАМЯТЬ И ЗАДАЧИ</span><span>10.11.2026 · НПП АС</span></footer><aside class="notes">Сохраняйте критерии, шаги, открытые вопросы и состояние. Отметка выполнения требует подтверждения по фактическим файлам или проверкам.</aside></section>
+<section class="slide" id="tracker" data-title="Трекер задач" data-owner="Азрет" aria-labelledby="title-tracker" hidden>
+<header><span class="logo">ai_sprint<span>.</span></span><span class="eyebrow">03 / ЗАДАЧИ И ПЛАН</span><span class="page">18 / 24</span></header>
+<h2 id="title-tracker">Трекер задач</h2>
+<p class="deck-lead">Агент работает с трекером через командную строку.</p>
+<div class="cards three">
+<article class="card"><span class="micro">BD</span><h3>Beads</h3><p>Задачи хранятся в репозитории. Есть зависимости и список готовых к работе.</p><pre class="inline-code">bd ready
+bd create
+bd update &lt;id&gt; --claim
+bd close &lt;id&gt;</pre></article><article class="card"><span class="micro">GH</span><h3>GitHub Issues</h3><p>Задачи видны всей команде на GitHub.</p><pre class="inline-code">gh issue list
+gh issue create
+gh issue view 12
+gh issue close 12</pre></article><article class="card"><span class="micro">CLI · API · MCP</span><h3>Другие трекеры</h3><p>Jira, YouTrack, GitLab — через их CLI, API или MCP-сервер.</p></article>
+</div>
+<p class="bottom-line">В CLAUDE.md: «Задачи веди в Beads. Перед работой выполни <code>bd ready</code>».</p>
+<footer><span>КОНТЕКСТ, ПАМЯТЬ И ЗАДАЧИ</span><span>10.11.2026 · НПП АС</span></footer><aside class="notes">Используйте трекер, уже принятый в проекте. Примеры команд требуют установленного CLI и настроенного проекта. В учебном репозитории трекер не устанавливают и публичные задачи не создают.</aside></section>
+<section class="slide" id="planning-practices" data-title="Как планировать с агентом" data-owner="Азрет" aria-labelledby="title-planning-practices" hidden>
+<header><span class="logo">ai_sprint<span>.</span></span><span class="eyebrow">03 / ЗАДАЧИ И ПЛАН</span><span class="page">19 / 24</span></header>
+<h2 id="title-planning-practices">Как планировать с агентом</h2>
+<div class="rules">
+<article class="card"><h3>План до кода</h3><p>Если задача затрагивает несколько файлов или её решение неясно.</p></article><article class="card"><h3>Критерии готовности</h3><p>В каждой задаче: команда или проверка, которая покажет результат.</p></article><article class="card"><h3>Маленькие шаги</h3><p>Каждый шаг заканчивается проверяемым результатом.</p></article><article class="card"><h3>Одна задача — одна сессия</h3><p>Закончили задачу — <code>/clear</code>.</p></article><article class="card"><h3>Новое — новой задачей</h3><p>Найденное по ходу заводите отдельно, текущую задачу не расширяйте.</p></article><article class="card"><h3>Читать план</h3><p>Ошибку в плане исправить дешевле, чем в коде.</p></article>
+</div>
+<footer><span>КОНТЕКСТ, ПАМЯТЬ И ЗАДАЧИ</span><span>10.11.2026 · НПП АС</span></footer><aside class="notes">Начинайте с цели и проверки результата. Если условия изменились, обновите план. Не расширяйте задачу незаметно для участника.</aside></section>
+<section class="slide night practice" id="practice-plan" data-title="Практика: задачи и план" data-owner="Азрет" aria-labelledby="title-practice-plan" hidden>
+<header><span class="logo">ai_sprint<span>.</span></span><span class="eyebrow">ПРАКТИКА 03 / ЗАДАЧИ И ПЛАН</span><span class="page">20 / 24</span></header>
+<h2 id="title-practice-plan">Практика: задачи и план</h2>
+<p class="deck-lead">Повторяйте у себя в Claude Code, в папке студенческого репозитория.</p>
+<table class="lesson-table practice-table"><thead><tr><th>Ситуация</th><th>Действие</th></tr></thead><tbody><tr><td>Задача больше пары шагов</td><td>Plan mode: <code>Shift+Tab</code> в терминале, переключатель режима в Desktop</td></tr><tr><td>План нужно поправить</td><td>Ответ с правкой. В терминале также <code>Ctrl+G</code></td></tr><tr><td>Задача на несколько сессий</td><td>Первый шаг плана — сохранить его в <code>work/plan.md</code></td></tr><tr><td>Агент выполняет план</td><td>В терминале <code>Ctrl+T</code> — список шагов</td></tr><tr><td>Продолжить в новой сессии</td><td><code>/clear</code>, затем «Прочитай план и назови следующий шаг»</td></tr><tr><td>Задачи на недели, несколько людей</td><td>Трекер: <code>gh issue list</code>, <code>bd ready</code></td></tr></tbody></table>
+<footer><span>КОНТЕКСТ, ПАМЯТЬ И ЗАДАЧИ</span><span>10.11.2026 · НПП АС</span></footer><aside class="notes">Практика 3 создаёт work/summary.md и work/plan.md внутри exercises/03-context-and-plan/. После первого раздела остановитесь и восстановите работу в новой сессии. Корневой README менять не нужно.</aside></section>
+<section class="slide" id="state" data-title="Запрос состояния" data-owner="Азрет" aria-labelledby="title-state" hidden>
+<header><span class="logo">ai_sprint<span>.</span></span><span class="eyebrow">04 / СОСТОЯНИЕ</span><span class="page">21 / 24</span></header>
+<h2 id="title-state">Запрос состояния</h2>
+<p class="term-definition"><strong>Состояние проекта</strong> — проверенная сводка: что сделано, что работает, что открыто и что сейчас запущено.</p>
+<div class="split">
+<article class="card"><h3>Из чего собирается</h3><ul><li>Git: ветка, незакоммиченные изменения, последние коммиты.</li><li>Сборка и тесты: результат запуска.</li><li>Задачи: открытые и начатые.</li><li>Фоновая работа: сабагенты и процессы, <code>/tasks</code>.</li></ul></article><div><span class="micro">ЗАПРОС</span><pre class="agent-code">Покажи состояние проекта:
+- ветка и незакоммиченные изменения;
+- сборка и тесты: запусти, покажи итог;
+- открытые и начатые задачи;
+- запущенные фоновые задачи.
+Для каждого пункта укажи команду
+проверки. Ничего не меняй.</pre></div>
+</div>
+<p class="bottom-line">Команда для каждого пункта показывает, что агент проверил, а что пересказал из истории.</p>
+<footer><span>КОНТЕКСТ, ПАМЯТЬ И ЗАДАЧИ</span><span>10.11.2026 · НПП АС</span></footer><aside class="notes">Состав проверки зависит от задачи. Если сборки или тестов нет, сообщите об этом. Проверки могут иметь побочные эффекты: перед запуском учитывайте их.</aside></section>
+<section class="slide" id="state-by-task" data-title="Состав зависит от задачи" data-owner="Азрет" aria-labelledby="title-state-by-task" hidden>
+<header><span class="logo">ai_sprint<span>.</span></span><span class="eyebrow">04 / СОСТОЯНИЕ</span><span class="page">22 / 24</span></header>
+<h2 id="title-state-by-task">Состав зависит от задачи</h2>
+<table class="lesson-table state-table"><thead><tr><th>Задача</th><th>Что включить в запрос</th></tr></thead><tbody><tr><td>Разработка</td><td>Ветка, изменения, сборка, тесты, открытые задачи</td></tr><tr><td>Исправление ошибки</td><td>Воспроизводится ли ошибка, есть ли тест на неё, что изменено</td></tr><tr><td>Тестирование</td><td>Какие проверки прошли и упали, версия под тестом, открытые дефекты</td></tr><tr><td>Администрирование</td><td>Состояние сервисов, ошибки в журналах за сутки, незавершённые изменения настроек</td></tr><tr><td>Документация</td><td>Готовые разделы, проверенные источники, открытые вопросы</td></tr><tr><td>Работа нескольких агентов</td><td>Запущенные сабагенты, их результаты, файлы, которые меняли несколько агентов</td></tr></tbody></table>
+<footer><span>КОНТЕКСТ, ПАМЯТЬ И ЗАДАЧИ</span><span>10.11.2026 · НПП АС</span></footer><aside class="notes">Для документа проверяйте разделы, ссылки и источники. Для приложения — подходящие сборку и тесты. Отсутствие доступа к процессу не доказывает, что он не запущен.</aside></section>
+<section class="slide night practice" id="practice-state" data-title="Практика: состояние" data-owner="Азрет" aria-labelledby="title-practice-state" hidden>
+<header><span class="logo">ai_sprint<span>.</span></span><span class="eyebrow">ПРАКТИКА 04 / СОСТОЯНИЕ</span><span class="page">23 / 24</span></header>
+<h2 id="title-practice-state">Практика: состояние</h2>
+<p class="deck-lead">Повторяйте у себя в Claude Code, в папке студенческого репозитория.</p>
+<table class="lesson-table practice-table"><thead><tr><th>Ситуация</th><th>Действие</th></tr></thead><tbody><tr><td>Начало дня, возврат после перерыва</td><td>Запрос состояния со слайда 21</td></tr><tr><td>Агент сообщил «готово»</td><td>«Какой командой ты это проверил? Покажи результат»</td></tr><tr><td>Перед закрытием задачи</td><td>«Проверь по критериям готовности из плана»</td></tr><tr><td>Что работает в фоне</td><td><code>/tasks</code>. В Desktop: меню ⋮ → Background tasks</td></tr></tbody></table>
+<footer><span>КОНТЕКСТ, ПАМЯТЬ И ЗАДАЧИ</span><span>10.11.2026 · НПП АС</span></footer><aside class="notes">Практика 4 проверяет результат по сохранённому плану. Папка work/ исключена из Git: проверяйте её файлы напрямую. В копии из ZIP Git не обязателен.</aside></section>
+<section class="slide night" id="cheatsheet" data-title="Шпаргалка" data-owner="Азрет" aria-labelledby="title-cheatsheet" hidden>
+<header><span class="logo">ai_sprint<span>.</span></span><span class="eyebrow">ЛЕКЦИЯ 02</span><span class="page">24 / 24</span></header>
+<h2 id="title-cheatsheet">Шпаргалка</h2>
+<div class="cheatsheet">
+<article><span class="micro">01 / КОНТЕКСТ</span><ul><li><code>/context</code></li><li><code>@файл</code></li><li><code>/clear</code></li><li><code>/compact</code></li><li><code>Esc Esc</code></li><li><code>/branch</code>, <code>/fork</code></li><li><code>/btw</code></li></ul></article>
+<article><span class="micro">02 / ПАМЯТЬ</span><ul><li><code>~/.claude/CLAUDE.md</code></li><li><code>CLAUDE.md</code></li><li><code>CLAUDE.local.md</code></li><li><code>.claude/rules/</code></li><li><code>/memory</code></li><li><code>docs/decisions.md</code></li></ul></article>
+<article><span class="micro">03 / ЗАДАЧИ И ПЛАН</span><ul><li><code>Shift+Tab</code>, <code>/plan</code></li><li><code>Ctrl+G</code></li><li><code>Ctrl+T</code></li><li><code>docs/plans/*.md</code></li><li><code>bd ready</code></li><li><code>gh issue list</code></li></ul></article>
+<article><span class="micro">04 / СОСТОЯНИЕ</span><ul><li><code>git status</code></li><li>сборка и тесты</li><li>открытые задачи</li><li><code>/tasks</code></li></ul></article>
+</div>
+<p class="footnote"><code>Esc Esc</code>, <code>Ctrl+G</code>, <code>Ctrl+T</code>, <code>Shift+Tab</code> — в терминале. В Desktop режим меняет переключатель под полем ввода или <code>Cmd+Shift+M</code>.</p>
+<footer><span>КОНТЕКСТ, ПАМЯТЬ И ЗАДАЧИ</span><span>10.11.2026 · НПП АС</span></footer><aside class="notes">К трекингу 12 ноября продолжите свою текущую задачу после новой сессии и проверьте результат. Подробности — homework.md рядом с презентацией.</aside></section>
+</main>
+<nav aria-label="Управление презентацией" class="controls"><button aria-label="Предыдущий слайд" id="previous" title="Назад (←)">←</button><button id="overview-open" title="Все слайды (O)"><span id="counter">01 / 24</span><span class="control-label">Слайды</span></button><button aria-label="Следующий слайд" id="next" title="Дальше (→ / Пробел)">→</button><span class="control-divider"></span><button aria-expanded="false" id="notes-toggle" title="Пояснения к слайду (N)">Пояснения <kbd>N</kbd></button><button id="fullscreen" title="Полный экран (F)">Экран <kbd>F</kbd></button></nav>
+<div aria-hidden="true" id="progress"></div>
+<p aria-live="polite" class="sr-only" id="announcement"></p>
+<aside aria-label="Пояснения к слайду" hidden="" id="notes-panel"><div><span class="mono" id="notes-owner"></span><button aria-label="Закрыть пояснения" id="notes-close">×</button></div><h2 id="notes-title"></h2><p id="notes-text"></p><small>Пояснения дополняют слайд. Полный текст — в lecture.md рядом с презентацией.</small></aside>
+<dialog aria-labelledby="overview-title" id="overview"><div class="overview-header"><h2 id="overview-title">Вторая лекция: слайды</h2><button aria-label="Закрыть список слайдов" id="overview-close">×</button></div><ol id="slide-list"></ol><p>← → / Пробел — переход · Home / End — начало / конец · N — пояснения · F — полный экран</p></dialog>
+<noscript><p class="no-script">JavaScript отключён: все слайды показаны последовательно. Включите JavaScript для режима презентации.</p><style>.slide[hidden]{display:flex!important}body{overflow:auto}#deck{display:block;height:auto}.slide{position:relative;width:1600px;height:900px;transform:none!important}.controls{display:none}</style></noscript>
+</body>
+</html>
