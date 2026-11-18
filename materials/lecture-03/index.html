@@ -1,0 +1,178 @@
+<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Повторяемое → инструмент — AI Sprint</title><link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="lecture.css"><script src="deck.js" defer></script></head><body><main id="deck" aria-label="Третья лекция: повторяемое → инструмент">
+<section class="slide" id="start" data-title="Повторяемое → инструмент" data-owner="Азрет" aria-labelledby="title-start">
+<header><span class="logo">ai_sprint<span>.</span></span><span class="eyebrow">ЛЕКЦИЯ 03</span><span class="page">1 / 26</span></header>
+<div class="title-layout"><p class="kicker">AI SPRINT · НЕДЕЛЯ 3</p><h2 id="title-start">Повторяемое →<br>инструмент</h2><p class="intro">Азрет Магометов<br>17 ноября 2026, 14:00 МСК</p></div>
+<footer><span>ПОВТОРЯЕМОЕ → ИНСТРУМЕНТ</span><span>17.11.2026 · НПП АС</span></footer></section>
+<section class="slide" id="contents" data-title="Содержание" data-owner="Азрет" aria-labelledby="title-contents" hidden>
+<header><span class="logo">ai_sprint<span>.</span></span><span class="eyebrow">ЛЕКЦИЯ 03</span><span class="page">2 / 26</span></header>
+<h2 id="title-contents">Содержание</h2><div class="contents three-cols"><article><span class="contents-no">01</span><h3>Инструменты</h3><p>Как агент действует. Скрипт как свой инструмент. Разрешения.</p><p class="contents-adds">+ скрипт проверки</p></article><article><span class="contents-no">02</span><h3>Скиллы</h3><p>Устройство, места хранения, свой скилл, чужие скиллы.</p><p class="contents-adds">+ скилл разбора встречи</p></article><article><span class="contents-no">03</span><h3>Хуки и ограничения</h3><p>События, коды выхода, отличие от разрешений и инструкций.</p><p class="contents-adds">+ защита и обязательная проверка</p></article><article><span class="contents-no">04</span><h3>MCP</h3><p>Клиент и сервер. Свой сервер. Где брать готовые.</p><p class="contents-adds">+ передача задач</p></article><article><span class="contents-no">05</span><h3>Плагины</h3><p>Упаковка и маркетплейс. Как отдать инструмент команде.</p><p class="contents-adds">+ плагин для коллег</p></article><article><span class="contents-no">06</span><h3>Карта выбора</h3><p>Какой механизм под какую задачу.</p><p class="contents-adds">+ шаг недели</p></article></div><p class="bottom-line">Один инструмент растёт через всю встречу: транскрипт встречи → протокол → задачи команды.</p>
+<footer><span>ПОВТОРЯЕМОЕ → ИНСТРУМЕНТ</span><span>17.11.2026 · НПП АС</span></footer></section>
+<section class="slide" id="tool-call" data-title="Что такое инструмент" data-owner="Азрет" aria-labelledby="title-tool-call" hidden>
+<header><span class="logo">ai_sprint<span>.</span></span><span class="eyebrow">01 / ИНСТРУМЕНТЫ</span><span class="page">3 / 26</span></header>
+<h2 id="title-tool-call">Что такое инструмент</h2><p class="term-definition"><strong>Инструмент</strong> — действие, которое клиент выполняет по запросу модели: прочитать файл, запустить команду, найти текст.</p><div class="flow" style="--n:4"><div class="flow-step"><span class="micro">1 · МОДЕЛЬ</span><h3>Просит вызов</h3><p>Пишет имя инструмента и аргументы. Сама ничего не выполняет.</p></div><div class="flow-step"><span class="micro">2 · КЛИЕНТ</span><h3>Проверяет</h3><p>Разрешения и хуки: можно ли выполнить без вопроса.</p></div><div class="flow-step"><span class="micro">3 · КЛИЕНТ</span><h3>Выполняет</h3><p>Читает файл, запускает команду на вашем компьютере.</p></div><div class="flow-step"><span class="micro">4 · КОНТЕКСТ</span><h3>Результат</h3><p>Вывод попадает в контекст. Модель решает, что дальше.</p></div></div><div class="split tool-schema"><div><p class="micro">ЧТО МОДЕЛЬ ЗНАЕТ ОБ ИНСТРУМЕНТЕ</p><pre class="agent-code small-code">{
+  &quot;name&quot;: &quot;Read&quot;,
+  &quot;description&quot;: &quot;Reads a file…&quot;,
+  &quot;input_schema&quot;: {&quot;file_path&quot;: &quot;string&quot;}
+}</pre></div><p class="side-note">Имя, описание и схема входа приходят в контекст в начале сессии. По описанию модель решает, когда вызвать инструмент.</p></div>
+<footer><span>ПОВТОРЯЕМОЕ → ИНСТРУМЕНТ</span><span>17.11.2026 · НПП АС</span></footer></section>
+<section class="slide" id="builtin" data-title="Встроенные инструменты" data-owner="Азрет" aria-labelledby="title-builtin" hidden>
+<header><span class="logo">ai_sprint<span>.</span></span><span class="eyebrow">01 / ИНСТРУМЕНТЫ</span><span class="page">4 / 26</span></header>
+<h2 id="title-builtin">Встроенные инструменты Claude Code</h2><table class="lesson-table builtin-table"><thead><tr><th>Инструмент</th><th>Что делает</th><th>По умолчанию</th></tr></thead><tbody><tr><td><code>Read</code>, <code>Glob</code>, <code>Grep</code></td><td>Читает файлы, ищет по именам и тексту</td><td>без вопроса</td></tr><tr><td><code>Edit</code>, <code>Write</code></td><td>Правит и создаёт файлы</td><td>спрашивает</td></tr><tr><td><code>Bash</code></td><td>Запускает команды терминала: скрипты, сборку, git</td><td>спрашивает</td></tr><tr><td><code>WebFetch</code>, <code>WebSearch</code></td><td>Читает страницу, ищет в интернете</td><td>спрашивает</td></tr></tbody></table><p class="bottom-line">Это не весь список. Сабагенты — инструмент <code>Agent</code> — разберём в лекции 4. MCP-серверы добавляют свои инструменты — тема 04.</p>
+<footer><span>ПОВТОРЯЕМОЕ → ИНСТРУМЕНТ</span><span>17.11.2026 · НПП АС</span></footer></section>
+<section class="slide" id="script-tool" data-title="Скрипт как свой инструмент" data-owner="Азрет" aria-labelledby="title-script-tool" hidden>
+<header><span class="logo">ai_sprint<span>.</span></span><span class="eyebrow">01 / ИНСТРУМЕНТЫ</span><span class="page">5 / 26</span></header>
+<h2 id="title-script-tool">Скрипт как свой инструмент</h2><p class="deck-lead">Агент запускает скрипт через Bash и читает его вывод. Чтобы агент понял результат, у скрипта должен быть контракт.</p><div class="cards two"><article class="card"><h3>Контракт скрипта</h3><ul><li>Вход — аргументы и файлы</li><li>Вывод — понятный текст: что найдено и где</li><li>Ошибки — в stderr, отдельно от результата</li><li>Итог — код возврата: 0 — всё в порядке, 1 — найдены проблемы, 2 — не смог запуститься</li></ul></article><article class="card"><span class="micro">ПРИМЕР</span><pre class="agent-code small-code">$ uv run check_protocol.py work/meeting.protocol.md
+найдено проблем — 3
+- Задача 5: не указан исполнитель
+- Задача 6: срок «как будет время» не дата
+- Личные данные в протоколе: 8 900 000-12-34
+$ echo $?
+1</pre></article></div><p class="bottom-line">По коду возврата итог понимают агент, хук и любая автоматизация — не читая текст.</p><p class="footnote"><code>uv run</code> запускает Python-скрипт на Windows, macOS и Linux; Python и библиотеки uv ставит сам.</p>
+<footer><span>ПОВТОРЯЕМОЕ → ИНСТРУМЕНТ</span><span>17.11.2026 · НПП АС</span></footer></section>
+<section class="slide" id="permissions" data-title="Разрешения" data-owner="Азрет" aria-labelledby="title-permissions" hidden>
+<header><span class="logo">ai_sprint<span>.</span></span><span class="eyebrow">01 / ИНСТРУМЕНТЫ</span><span class="page">6 / 26</span></header>
+<h2 id="title-permissions">Разрешения</h2><p class="term-definition"><strong>Разрешение</strong> — правило, которое клиент проверяет перед вызовом инструмента.</p><div class="split perm-split"><div><pre class="agent-code tiny-code">{
+  &quot;permissions&quot;: {
+    &quot;defaultMode&quot;: &quot;default&quot;,
+    &quot;allow&quot;: [&quot;Bash(uv run *)&quot;, &quot;Read(./docs/**)&quot;],
+    &quot;ask&quot;:   [&quot;Bash(git push *)&quot;],
+    &quot;deny&quot;:  [&quot;WebFetch&quot;, &quot;WebSearch&quot;,
+              &quot;Edit(**/*.transcript.md)&quot;,
+              &quot;Read(./.env)&quot;,
+              &quot;mcp__meeting-tasks__add_task&quot;],
+    &quot;additionalDirectories&quot;: [&quot;../shared&quot;],
+    &quot;disableBypassPermissionsMode&quot;: &quot;disable&quot;
+  }
+}</pre></div><dl class="perm-keys"><dt>defaultMode</dt><dd>режим при старте: default, acceptEdits, plan, auto, dontAsk, bypassPermissions</dd><dt>allow</dt><dd>выполнять без вопроса</dd><dt>ask</dt><dd>всегда спрашивать</dd><dt>deny</dt><dd>отказать; сильнее ask и allow</dd><dt>additionalDirectories</dt><dd>папки вне проекта, к которым есть доступ</dd><dt>disableBypassPermissionsMode</dt><dd>«disable» запрещает включать bypassPermissions; правила allow продолжают работать</dd></dl></div><p class="footnote">Правило: <code>Инструмент(шаблон)</code>. Файлы: <code>~/.claude/settings.json</code> — ваши, <code>.claude/settings.json</code> — проекта, в git, <code>.claude/settings.local.json</code> — ваши в этом проекте.</p>
+<footer><span>ПОВТОРЯЕМОЕ → ИНСТРУМЕНТ</span><span>17.11.2026 · НПП АС</span></footer></section>
+<section class="slide night practice" id="practice-tools" data-title="Разрешения в Claude Code" data-owner="Азрет" aria-labelledby="title-practice-tools" hidden>
+<header><span class="logo">ai_sprint<span>.</span></span><span class="eyebrow">01 / ИНСТРУМЕНТЫ</span><span class="page">7 / 26</span></header>
+<h2 id="title-practice-tools">Разрешения в Claude Code</h2><table class="lesson-table practice-table"><thead><tr><th>Ситуация</th><th>Действие</th></tr></thead><tbody><tr><td>Какие правила действуют сейчас</td><td><code>/permissions</code>: списки allow, ask и deny</td></tr><tr><td>Агент просит запустить скрипт проверки</td><td>«Да, и не спрашивать снова» — правило записывается в <code>.claude/settings.local.json</code></td></tr><tr><td>Где лежат правила</td><td>Открыть <code>~/.claude/settings.json</code> и <code>.claude/settings.local.json</code></td></tr><tr><td>Правило не нужно</td><td>Удалить в <code>/permissions</code> или в файле</td></tr></tbody></table>
+<footer><span>ПОВТОРЯЕМОЕ → ИНСТРУМЕНТ</span><span>17.11.2026 · НПП АС</span></footer></section>
+<section class="slide" id="skill-anatomy" data-title="Как устроен скилл" data-owner="Азрет" aria-labelledby="title-skill-anatomy" hidden>
+<header><span class="logo">ai_sprint<span>.</span></span><span class="eyebrow">02 / СКИЛЛЫ</span><span class="page">8 / 26</span></header>
+<h2 id="title-skill-anatomy">Как устроен скилл</h2><p class="term-definition"><strong>Скилл</strong> — папка с инструкцией <code>SKILL.md</code>. Агент загружает её, когда задача подходит под описание.</p><div class="split skill-split"><div><pre class="agent-code small-code">meeting-to-tasks/
+├── SKILL.md
+└── scripts/
+    └── check_protocol.py
+
+---
+name: meeting-to-tasks
+description: Составляет протокол встречи
+  из транскрипта… Используйте, когда
+  просят разобрать запись встречи.
+---
+# Протокол встречи → задачи
+1. Прочитайте транскрипт целиком…</pre></div><div class="flow vertical" style="--n:3"><div class="flow-step"><span class="micro">СТАРТ СЕССИИ</span><h3>Описание</h3><p>В контексте только name и description всех скиллов.</p></div><div class="flow-step"><span class="micro">ЗАДАЧА ПОДОШЛА</span><h3>Инструкция</h3><p>Агент читает весь SKILL.md.</p></div><div class="flow-step"><span class="micro">ПО ХОДУ</span><h3>Файлы</h3><p>Читает справочники и запускает скрипты из папки.</p></div></div></div><p class="bottom-line">Описание решает, вызовется ли скилл. Напишите в нём, что он делает и когда нужен.</p>
+<footer><span>ПОВТОРЯЕМОЕ → ИНСТРУМЕНТ</span><span>17.11.2026 · НПП АС</span></footer></section>
+<section class="slide" id="skill-places" data-title="Где лежат скиллы" data-owner="Азрет" aria-labelledby="title-skill-places" hidden>
+<header><span class="logo">ai_sprint<span>.</span></span><span class="eyebrow">02 / СКИЛЛЫ</span><span class="page">9 / 26</span></header>
+<h2 id="title-skill-places">Где лежат скиллы</h2><table class="lesson-table storage"><thead><tr><th>Место</th><th>Путь</th><th>Кто получает</th></tr></thead><tbody><tr><td>Личные</td><td><code>~/.claude/skills/&lt;имя&gt;/</code></td><td>только вы, во всех проектах</td></tr><tr><td>Проект</td><td><code>.claude/skills/&lt;имя&gt;/</code></td><td>все, кто клонировал репозиторий</td></tr><tr><td>Плагин</td><td><code>skills/&lt;имя&gt;/</code> внутри плагина</td><td>все, кто установил плагин. Тема 05</td></tr></tbody></table><p class="bottom-line">Скилл в репозитории проекта — самый простой способ отдать его команде: коллега получает его вместе с <code>git pull</code>.</p><p class="footnote">Формат SKILL.md открытый (agentskills.io). Codex читает <code>.agents/skills/</code>; в студенческом репозитории лежат обе копии.</p>
+<footer><span>ПОВТОРЯЕМОЕ → ИНСТРУМЕНТ</span><span>17.11.2026 · НПП АС</span></footer></section>
+<section class="slide" id="skill-writing" data-title="Как написать свой скилл" data-owner="Азрет" aria-labelledby="title-skill-writing" hidden>
+<header><span class="logo">ai_sprint<span>.</span></span><span class="eyebrow">02 / СКИЛЛЫ</span><span class="page">10 / 26</span></header>
+<h2 id="title-skill-writing">Как написать свой скилл</h2><div class="rules"><article class="card"><h3>Описание</h3><p>Что делает и когда вызывать — словами, которыми вы просите.</p></article><article class="card"><h3>Шаги</h3><p>По порядку. Каждый шаг можно проверить.</p></article><article class="card"><h3>Границы</h3><p>Чего не делать: не додумывать, не менять исходник.</p></article><article class="card"><h3>Проверка</h3><p>Скрипт или критерий готовности. Повторять до прохождения.</p></article><article class="card"><h3>Итог</h3><p>Что сообщить: путь результата, проверки, ограничения.</p></article><article class="card"><h3>Размер</h3><p>SKILL.md короткий. Детали и примеры — в соседних файлах.</p></article></div><p class="bottom-line">Сначала сделайте задачу с агентом вручную. Потом попросите оформить сделанное как скилл и проверьте на новом примере.</p>
+<footer><span>ПОВТОРЯЕМОЕ → ИНСТРУМЕНТ</span><span>17.11.2026 · НПП АС</span></footer></section>
+<section class="slide" id="skill-market" data-title="Чужие скиллы" data-owner="Азрет" aria-labelledby="title-skill-market" hidden>
+<header><span class="logo">ai_sprint<span>.</span></span><span class="eyebrow">02 / СКИЛЛЫ</span><span class="page">11 / 26</span></header>
+<h2 id="title-skill-market">Чужие скиллы</h2><div class="cards two"><article class="card"><h3>Где брать</h3><ul><li><code>github.com/anthropics/skills</code> — официальные примеры: документы, таблицы, презентации</li><li><code>skills.sh</code> — каталог скиллов от Vercel с рейтингом установок; ставит <code>npx skills add &lt;owner/repo&gt;</code></li><li>скиллы внутри плагинов — тема 05</li><li>репозитории команд и сообщества</li></ul></article><article class="card"><h3>Что проверить перед установкой</h3><ul><li>прочитать SKILL.md целиком</li><li>какие скрипты запускает и что они делают</li><li>нет ли сети, отправки данных, правки настроек</li><li><code>allowed-tools</code> — что разрешено без вопроса</li></ul></article></div><p class="bottom-line">Скилл — чужие инструкции и чужой код в вашем контексте, с вашими правами.</p>
+<footer><span>ПОВТОРЯЕМОЕ → ИНСТРУМЕНТ</span><span>17.11.2026 · НПП АС</span></footer></section>
+<section class="slide night practice" id="practice-skills" data-title="Скилл разбирает встречу" data-owner="Азрет" aria-labelledby="title-practice-skills" hidden>
+<header><span class="logo">ai_sprint<span>.</span></span><span class="eyebrow">02 / СКИЛЛЫ</span><span class="page">12 / 26</span></header>
+<h2 id="title-practice-skills">Скилл разбирает встречу</h2><table class="lesson-table practice-table"><thead><tr><th>Ситуация</th><th>Действие</th></tr></thead><tbody><tr><td>Повторяемая задача, нужен скилл</td><td>Папка <code>meeting-to-tasks/</code> в <code>.claude/skills/</code>, новая сессия</td></tr><tr><td>Агент видит скилл?</td><td>«Какие скиллы тебе доступны?»</td></tr><tr><td>Разобрать встречу</td><td>«Составь протокол встречи по meeting-2026-11-16.transcript.md, сохрани в work/»</td></tr><tr><td>Вызвать скилл явно</td><td><code>/meeting-to-tasks meeting-2026-11-16.transcript.md</code></td></tr></tbody></table>
+<footer><span>ПОВТОРЯЕМОЕ → ИНСТРУМЕНТ</span><span>17.11.2026 · НПП АС</span></footer></section>
+<section class="slide" id="hook-anatomy" data-title="Как устроен хук" data-owner="Азрет" aria-labelledby="title-hook-anatomy" hidden>
+<header><span class="logo">ai_sprint<span>.</span></span><span class="eyebrow">03 / ХУКИ И ОГРАНИЧЕНИЯ</span><span class="page">13 / 26</span></header>
+<h2 id="title-hook-anatomy">Как устроен хук</h2><p class="term-definition"><strong>Хук</strong> — команда, которую клиент сам запускает на событии сессии. Модель её не вызывает и не может пропустить.</p><div class="flow" style="--n:4"><div class="flow-step"><span class="micro">СОБЫТИЕ</span><h3>PreToolUse</h3><p>Агент собрался записать файл.</p></div><div class="flow-step"><span class="micro">КОМАНДА</span><h3>Скрипт</h3><p>Клиент запускает хук и передаёт JSON события на вход.</p></div><div class="flow-step"><span class="micro">КОД ВЫХОДА</span><h3>0 или 2</h3><p>0 — продолжить. 2 — заблокировать действие.</p></div><div class="flow-step"><span class="micro">АГЕНТ</span><h3>Причина</h3><p>Текст из stderr агент видит как объяснение.</p></div></div><pre class="agent-code small-code hook-code">&quot;PreToolUse&quot;: [{
+  &quot;matcher&quot;: &quot;Write|Edit&quot;,
+  &quot;hooks&quot;: [{&quot;type&quot;: &quot;command&quot;,
+             &quot;command&quot;: &quot;uv run protocol_hooks.py guard&quot;}]
+}]</pre>
+<footer><span>ПОВТОРЯЕМОЕ → ИНСТРУМЕНТ</span><span>17.11.2026 · НПП АС</span></footer></section>
+<section class="slide" id="hook-events" data-title="События хуков" data-owner="Азрет" aria-labelledby="title-hook-events" hidden>
+<header><span class="logo">ai_sprint<span>.</span></span><span class="eyebrow">03 / ХУКИ И ОГРАНИЧЕНИЯ</span><span class="page">14 / 26</span></header>
+<h2 id="title-hook-events">События</h2><table class="lesson-table events-table"><thead><tr><th>Событие</th><th>Когда</th><th>Пример</th></tr></thead><tbody><tr><td><code>SessionStart</code></td><td>начало или продолжение сессии</td><td>загрузить состояние задач</td></tr><tr><td><code>UserPromptSubmit</code></td><td>перед отправкой вашего сообщения</td><td>добавить контекст, найти секрет в тексте</td></tr><tr><td><code>PreToolUse</code></td><td>перед вызовом инструмента</td><td>запретить запись в защищённый файл</td></tr><tr><td><code>PostToolUse</code></td><td>после вызова инструмента</td><td>проверить или отформатировать изменённый файл</td></tr><tr><td><code>Stop</code></td><td>агент собирается закончить ответ</td><td>не закончить, пока проверка не прошла</td></tr></tbody></table><p class="footnote">Событий больше двадцати. Действующие хуки показывает команда <code>/hooks</code>.</p>
+<footer><span>ПОВТОРЯЕМОЕ → ИНСТРУМЕНТ</span><span>17.11.2026 · НПП АС</span></footer></section>
+<section class="slide" id="hook-vs" data-title="Инструкция, разрешение, хук" data-owner="Азрет" aria-labelledby="title-hook-vs" hidden>
+<header><span class="logo">ai_sprint<span>.</span></span><span class="eyebrow">03 / ХУКИ И ОГРАНИЧЕНИЯ</span><span class="page">15 / 26</span></header>
+<h2 id="title-hook-vs">Инструкция, разрешение, хук</h2><table class="lesson-table vs-table"><thead><tr><th>Механизм</th><th>Что делает</th><th>Пример из практики</th></tr></thead><tbody><tr><td>Инструкция</td><td>Просит. Модель может забыть или понять иначе</td><td>«Не переносите в протокол телефоны» в SKILL.md</td></tr><tr><td>Разрешение</td><td>Запрещает по имени инструмента и пути</td><td><code>deny Edit(**/*.transcript.md)</code></td></tr><tr><td>Хук</td><td>Проверяет программой: содержимое, состояние, результат</td><td>Нет телефона в записываемом тексте. Не закончить, пока протокол не проходит проверку</td></tr></tbody></table><p class="bottom-line">Обязательное — в разрешение или хук. Инструкция — для того, что требует суждения.</p><p class="footnote">Кухня: инструкция — шеф «без орехов», разрешение — погреб только у сомелье, хук — су-шеф на раздаче.</p>
+<footer><span>ПОВТОРЯЕМОЕ → ИНСТРУМЕНТ</span><span>17.11.2026 · НПП АС</span></footer></section>
+<section class="slide" id="hook-examples" data-title="Хуки на практике" data-owner="Азрет" aria-labelledby="title-hook-examples" hidden>
+<header><span class="logo">ai_sprint<span>.</span></span><span class="eyebrow">03 / ХУКИ И ОГРАНИЧЕНИЯ</span><span class="page">16 / 26</span></header>
+<h2 id="title-hook-examples">Хуки на практике</h2><div class="rules rules-four"><article class="card"><h3>Защитить</h3><p>PreToolUse не даёт записать ключи и пароли в файлы.</p></article><article class="card"><h3>Проверить</h3><p>PostToolUse запускает линтер или сборку после правки.</p></article><article class="card"><h3>Довести</h3><p>Stop не даёт закончить, пока не прошли тесты.</p></article><article class="card"><h3>Напомнить</h3><p>SessionStart загружает состояние задач в новую сессию.</p></article></div><p class="footnote">Windows: пишите хуки на Python и запускайте через <code>uv run</code>, не на bash. Права: хук выполняется с вашими правами — чужой хук означает чужую программу на вашей машине.</p>
+<footer><span>ПОВТОРЯЕМОЕ → ИНСТРУМЕНТ</span><span>17.11.2026 · НПП АС</span></footer></section>
+<section class="slide night practice" id="practice-hooks" data-title="Разрешения и хуки" data-owner="Азрет" aria-labelledby="title-practice-hooks" hidden>
+<header><span class="logo">ai_sprint<span>.</span></span><span class="eyebrow">03 / ХУКИ И ОГРАНИЧЕНИЯ</span><span class="page">17 / 26</span></header>
+<h2 id="title-practice-hooks">Разрешения и хуки</h2><table class="lesson-table practice-table"><thead><tr><th>Ситуация</th><th>Действие</th></tr></thead><tbody><tr><td>Транскрипт менять нельзя, веб-поиск не нужен</td><td><code>.claude/settings.json</code>: deny <code>Edit(**/*.transcript.md)</code>, <code>WebFetch</code>, <code>WebSearch</code></td></tr><tr><td>Телефон не должен попасть в протокол</td><td>PreToolUse-хук. Попросить добавить телефон Олега в протокол</td></tr><tr><td>Агент не должен закончить с ошибками в протоколе</td><td>Stop-хук. Положить испорченный протокол в work/ и задать любой вопрос</td></tr><tr><td>Какие хуки действуют</td><td><code>/hooks</code></td></tr></tbody></table>
+<footer><span>ПОВТОРЯЕМОЕ → ИНСТРУМЕНТ</span><span>17.11.2026 · НПП АС</span></footer></section>
+<section class="slide" id="mcp" data-title="MCP" data-owner="Азрет" aria-labelledby="title-mcp" hidden>
+<header><span class="logo">ai_sprint<span>.</span></span><span class="eyebrow">04 / MCP</span><span class="page">18 / 26</span></header>
+<h2 id="title-mcp">MCP: внешняя система как инструменты</h2><p class="term-definition"><strong>MCP</strong> (Model Context Protocol) — открытый протокол, по которому клиент подключает внешние серверы инструментов.</p><div class="mcp-chain"><div class="node dark"><span class="micro">МОДЕЛЬ</span><h3>Просит вызов</h3></div><b>↔</b><div class="node"><span class="micro">КЛИЕНТ</span><h3>Claude Code</h3></div><b>↔</b><div class="node accent"><span class="micro">MCP-СЕРВЕР</span><h3>meeting-tasks</h3></div><b>↔</b><div class="node"><span class="micro">СИСТЕМА</span><h3>Трекер, база, календарь, файл</h3></div></div><div class="flow" style="--n:3"><div class="flow-step"><span class="micro">1 · ПОДКЛЮЧЕНИЕ</span><h3>Запуск</h3><p>Клиент запускает сервер как процесс (stdio) или подключается по HTTP.</p></div><div class="flow-step"><span class="micro">2 · TOOLS/LIST</span><h3>Список</h3><p>Сервер называет свои инструменты: имя, описание, схема входа.</p></div><div class="flow-step"><span class="micro">3 · TOOLS/CALL</span><h3>Вызов</h3><p>Клиент передаёт вызов модели серверу и возвращает результат.</p></div></div>
+<footer><span>ПОВТОРЯЕМОЕ → ИНСТРУМЕНТ</span><span>17.11.2026 · НПП АС</span></footer></section>
+<section class="slide" id="mcp-own" data-title="Свой MCP-сервер" data-owner="Азрет" aria-labelledby="title-mcp-own" hidden>
+<header><span class="logo">ai_sprint<span>.</span></span><span class="eyebrow">04 / MCP</span><span class="page">19 / 26</span></header>
+<h2 id="title-mcp-own">Свой MCP-сервер</h2><div class="split mcp-split"><div><pre class="agent-code small-code">from mcp.server import MCPServer
+
+mcp = MCPServer(&quot;meeting-tasks&quot;)
+
+@mcp.tool()
+def add_task(meeting: str, action: str,
+             owner: str, due: str,
+             source: str) -&gt; str:
+    &quot;&quot;&quot;Add one task from a meeting
+    protocol to the team task list.&quot;&quot;&quot;
+    ...  # append a row to meeting-tasks.csv
+
+if __name__ == &quot;__main__&quot;:
+    mcp.run()</pre></div><div><p class="micro">.mcp.json В КОРНЕ ПРОЕКТА</p><pre class="inline-code">{&quot;mcpServers&quot;: {&quot;meeting-tasks&quot;: {
+  &quot;command&quot;: &quot;uv&quot;,
+  &quot;args&quot;: [&quot;run&quot;, &quot;tools/tasks_server.py&quot;]
+}}}</pre><table class="lesson-table compact scopes"><thead><tr><th>Область</th><th>Где</th><th>Кто получает</th></tr></thead><tbody><tr><td>local</td><td><code>claude mcp add</code></td><td>вы, этот проект</td></tr><tr><td>project</td><td><code>.mcp.json</code> в git</td><td>команда, после подтверждения</td></tr><tr><td>user</td><td><code>--scope user</code></td><td>вы, все проекты</td></tr></tbody></table></div></div><p class="bottom-line">Описание инструмента — то, что видит модель. Пишите его как инструкцию.</p>
+<footer><span>ПОВТОРЯЕМОЕ → ИНСТРУМЕНТ</span><span>17.11.2026 · НПП АС</span></footer></section>
+<section class="slide" id="mcp-market" data-title="Готовые серверы и риски" data-owner="Азрет" aria-labelledby="title-mcp-market" hidden>
+<header><span class="logo">ai_sprint<span>.</span></span><span class="eyebrow">04 / MCP</span><span class="page">20 / 26</span></header>
+<h2 id="title-mcp-market">Готовые серверы и риски</h2><div class="cards two"><article class="card"><h3>Где брать</h3><ul><li>реестр <code>registry.modelcontextprotocol.io</code></li><li>серверы производителей: GitHub, Atlassian, базы данных</li><li>коннекторы claude.ai: почта, диск, календарь</li><li>MCP-серверы внутри плагинов</li></ul></article><article class="card"><h3>Что проверить</h3><ul><li>токен сервера даёт доступ к вашей системе — минимальные права</li><li>данные системы попадают в контекст: текст письма или задачи может содержать инструкции агенту</li><li>описания инструментов занимают контекст — смотрите /context</li><li>кто автор и что сервер отправляет наружу</li></ul></article></div><p class="bottom-line">Следующий шаг после учебного сервера: заменить его сервером вашего трекера.</p>
+<footer><span>ПОВТОРЯЕМОЕ → ИНСТРУМЕНТ</span><span>17.11.2026 · НПП АС</span></footer></section>
+<section class="slide night practice" id="practice-mcp" data-title="Сервер задач" data-owner="Азрет" aria-labelledby="title-practice-mcp" hidden>
+<header><span class="logo">ai_sprint<span>.</span></span><span class="eyebrow">04 / MCP</span><span class="page">21 / 26</span></header>
+<h2 id="title-practice-mcp">Сервер задач</h2><table class="lesson-table practice-table"><thead><tr><th>Ситуация</th><th>Действие</th></tr></thead><tbody><tr><td>Задачи должны попасть в список команды</td><td><code>tools/tasks_server.py</code> и <code>.mcp.json</code> в корне папки</td></tr><tr><td>Сервер подключён?</td><td>Новая сессия, <code>/mcp</code>, подтвердить сервер</td></tr><tr><td>Передать задачи</td><td>«Передай задачи из протокола в список команды»</td></tr><tr><td>Проверить результат</td><td>Открыть <code>meeting-tasks.csv</code>. Повторить запрос — дублей нет</td></tr></tbody></table>
+<footer><span>ПОВТОРЯЕМОЕ → ИНСТРУМЕНТ</span><span>17.11.2026 · НПП АС</span></footer></section>
+<section class="slide" id="plugins" data-title="Плагин" data-owner="Азрет" aria-labelledby="title-plugins" hidden>
+<header><span class="logo">ai_sprint<span>.</span></span><span class="eyebrow">05 / ПЛАГИНЫ</span><span class="page">22 / 26</span></header>
+<h2 id="title-plugins">Плагин: упаковка</h2><p class="term-definition"><strong>Плагин</strong> — папка, которая устанавливается целиком: скиллы, хуки, MCP-серверы, агенты и команды.</p><div class="split plugin-split"><div><pre class="agent-code small-code">meeting-tasks/
+├── .claude-plugin/
+│   └── plugin.json
+├── skills/
+│   └── meeting-to-tasks/
+├── hooks/
+│   └── hooks.json
+├── mcp/
+│   └── tasks_server.py
+└── .mcp.json</pre></div><table class="lesson-table compact vs-plugin"><thead><tr><th></th><th>Скилл</th><th>Плагин</th></tr></thead><tbody><tr><td>Внутри</td><td>инструкция и файлы</td><td>скиллы, хуки, MCP, агенты</td></tr><tr><td>Установка</td><td>скопировать папку</td><td><code>/plugin install</code></td></tr><tr><td>Обновление</td><td>вручную</td><td><code>/plugin</code>, по версии</td></tr><tr><td>Разрешения</td><td>нет</td><td>нет — решает пользователь</td></tr></tbody></table></div><p class="footnote">Пути внутри плагина — через <code>${CLAUDE_PLUGIN_ROOT}</code>: плагин не знает, куда его установят.</p>
+<footer><span>ПОВТОРЯЕМОЕ → ИНСТРУМЕНТ</span><span>17.11.2026 · НПП АС</span></footer></section>
+<section class="slide" id="marketplace" data-title="Маркетплейс" data-owner="Азрет" aria-labelledby="title-marketplace" hidden>
+<header><span class="logo">ai_sprint<span>.</span></span><span class="eyebrow">05 / ПЛАГИНЫ</span><span class="page">23 / 26</span></header>
+<h2 id="title-marketplace">Маркетплейс</h2><p class="deck-lead">Маркетплейс — репозиторий или папка со списком плагинов в <code>.claude-plugin/marketplace.json</code>.</p><div class="steps"><article class="card"><span class="micro">1</span><h3>Добавить</h3><pre class="inline-code">/plugin marketplace add owner/repo</pre><p>Или путь к локальной папке.</p></article><article class="card"><span class="micro">2</span><h3>Установить</h3><pre class="inline-code">/plugin install
+meeting-tasks@ai-sprint-practice</pre></article><article class="card"><span class="micro">3</span><h3>Управлять</h3><pre class="inline-code">/plugin</pre><p>Включить, выключить, обновить, удалить.</p></article></div><div class="cards two market-cards"><article class="card"><h3>Официальный и командный</h3><p><code>claude-plugins-official</code> — плагины Anthropic. Командный — свой git-репозиторий; проект указывает его в <code>.claude/settings.json</code>.</p></article><article class="card"><h3>Перед установкой чужого</h3><p>Прочитать <code>hooks/hooks.json</code> — что запускается на событиях, <code>.mcp.json</code> — какие серверы, и сами скрипты.</p></article></div>
+<footer><span>ПОВТОРЯЕМОЕ → ИНСТРУМЕНТ</span><span>17.11.2026 · НПП АС</span></footer></section>
+<section class="slide night practice" id="practice-plugins" data-title="Плагин meeting-tasks" data-owner="Азрет" aria-labelledby="title-practice-plugins" hidden>
+<header><span class="logo">ai_sprint<span>.</span></span><span class="eyebrow">05 / ПЛАГИНЫ</span><span class="page">24 / 26</span></header>
+<h2 id="title-practice-plugins">Плагин meeting-tasks</h2><table class="lesson-table practice-table"><thead><tr><th>Ситуация</th><th>Действие</th></tr></thead><tbody><tr><td>Проверить плагин без установки</td><td><code>claude --plugin-dir путь/meeting-tasks</code></td></tr><tr><td>Структура плагина верна?</td><td><code>claude plugin validate путь/meeting-tasks</code></td></tr><tr><td>Поставить, как коллега</td><td><code>/plugin marketplace add путь/practice</code>, затем <code>/plugin install meeting-tasks@ai-sprint-practice</code></td></tr><tr><td>Работает в чистой папке?</td><td>Тот же запрос на транскрипте, затем <code>/mcp</code> и <code>/hooks</code></td></tr></tbody></table>
+<footer><span>ПОВТОРЯЕМОЕ → ИНСТРУМЕНТ</span><span>17.11.2026 · НПП АС</span></footer></section>
+<section class="slide" id="map" data-title="Карта выбора" data-owner="Азрет" aria-labelledby="title-map" hidden>
+<header><span class="logo">ai_sprint<span>.</span></span><span class="eyebrow">06 / КАРТА ВЫБОРА</span><span class="page">25 / 26</span></header>
+<h2 id="title-map">Какой механизм выбрать</h2><table class="lesson-table map-table"><thead><tr><th>Задача</th><th>Механизм</th></tr></thead><tbody><tr><td>Объяснить агенту, как делать повторяемую работу</td><td>Скилл</td></tr><tr><td>Точная операция с одним правильным результатом</td><td>Скрипт, который вызывает агент</td></tr><tr><td>Запретить инструмент, файл или команду</td><td>Разрешение</td></tr><tr><td>Проверить содержимое или не дать закончить без проверки</td><td>Хук</td></tr><tr><td>Работать с внешней системой: трекер, база, календарь</td><td>MCP-сервер</td></tr><tr><td>Отдать набор команде или поставить в другой проект</td><td>Плагин и маркетплейс</td></tr></tbody></table>
+<footer><span>ПОВТОРЯЕМОЕ → ИНСТРУМЕНТ</span><span>17.11.2026 · НПП АС</span></footer></section>
+<section class="slide night" id="next-step" data-title="Шаг недели" data-owner="Азрет" aria-labelledby="title-next-step" hidden>
+<header><span class="logo">ai_sprint<span>.</span></span><span class="eyebrow">ЛЕКЦИЯ 03</span><span class="page">26 / 26</span></header>
+<h2 id="title-next-step">Шаг недели</h2><div class="assignment"><div><span class="assignment-no">01</span><h3>Найти</h3><p>Операцию, которую вы повторяли с агентом больше двух раз.</p></div><div><span class="assignment-no">02</span><h3>Оформить</h3><p>Скилл по удачному прогону. Точную часть — скриптом с кодом возврата.</p></div><div><span class="assignment-no">03</span><h3>Защитить</h3><p>Одно разрешение или хук. Продвинутым — MCP-сервер или плагин.</p></div></div><div class="assignment-bottom"><b>К трекингу 19 ноября</b><p>Покажите инструмент, его прогон на новом примере и что поймала проверка.</p></div>
+<footer><span>ПОВТОРЯЕМОЕ → ИНСТРУМЕНТ</span><span>17.11.2026 · НПП АС</span></footer></section>
+</main>
+<nav aria-label="Управление презентацией" class="controls"><button aria-label="Предыдущий слайд" id="previous" title="Назад (←)">←</button><button id="overview-open" title="Все слайды (O)"><span id="counter">01 / 26</span><span class="control-label">Слайды</span></button><button aria-label="Следующий слайд" id="next" title="Дальше (→ / Пробел)">→</button><span class="control-divider"></span><button aria-expanded="false" hidden id="notes-toggle" title="Заметки ведущего (N)">Заметки <kbd>N</kbd></button><button id="fullscreen" title="Полный экран (F)">Экран <kbd>F</kbd></button></nav>
+<div aria-hidden="true" id="progress"></div>
+<p aria-live="polite" class="sr-only" id="announcement"></p>
+<aside aria-label="Заметки ведущего" hidden="" id="notes-panel"><div><span class="mono" id="notes-owner"></span><button aria-label="Закрыть заметки" id="notes-close">×</button></div><h2 id="notes-title"></h2><p id="notes-text"></p><small>Заметки видны в этом окне. Закройте их перед демонстрацией участникам.</small></aside>
+<dialog aria-labelledby="overview-title" id="overview"><div class="overview-header"><h2 id="overview-title">Третья лекция: слайды</h2><button aria-label="Закрыть список слайдов" id="overview-close">×</button></div><ol id="slide-list"></ol><p>← → / Пробел — переход · Home / End — начало / конец · F — полный экран</p></dialog>
+<noscript><p class="no-script">JavaScript отключён: все слайды показаны последовательно. Включите JavaScript для режима презентации.</p><style>.slide[hidden]{display:flex!important}body{overflow:auto}#deck{display:block;height:auto}.slide{position:relative;width:1600px;height:900px;transform:none!important}.controls{display:none}</style></noscript>
+</body>
+</html>
