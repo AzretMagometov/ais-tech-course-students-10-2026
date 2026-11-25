@@ -1,0 +1,385 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Тестирование и сопровождение — AI Sprint</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="lecture.css">
+  <script src="deck.js" defer></script>
+</head>
+<body>
+<main id="deck" aria-label="Четвёртая лекция AI Sprint">
+<section class="slide" id="start" data-title="Тестирование и сопровождение" aria-labelledby="title-start">
+  <header><span class="logo">ai_sprint<span>.</span></span><span class="eyebrow">ЛЕКЦИЯ 04</span><span class="page">1 / 24</span></header>
+  <div class="cover"><div><p class="kicker">AI SPRINT · ЛЕКЦИЯ 04</p><h1 id="title-start">Тестирование и сопровождение</h1><p class="intro">Азрет Магометов · 24 ноября 2026</p></div><img class="cover-plate" src="assets/verification-plate.webp" alt="" width="840" height="840"></div>
+  <footer><span>ТЕСТИРОВАНИЕ И СОПРОВОЖДЕНИЕ</span><span>24.11.2026</span></footer>
+</section>
+<section class="slide" id="contents" data-title="Тестирование агента" aria-labelledby="title-contents" hidden>
+  <header><span class="logo">ai_sprint<span>.</span></span><span class="eyebrow">ПРЕДМЕТ ЛЕКЦИИ</span><span class="page">2 / 24</span></header>
+  <h2 id="title-contents">Тестирование агента</h2>
+  <div class="content">
+    <p class="term-definition"><strong>Тестирование</strong> — исследование поведения системы в заданных условиях. Систематическую проверку ИИ на наборе задач по заданным критериям называют эвалом (evaluation).</p>
+    <div class="cols">
+      <article class="panel"><h3>Результат работы</h3><p>Агент может изменить состояние системы и сообщить, что сделал. Требования к изменению и к достоверности сообщения различаются.</p></article>
+      <article class="panel"><h3>Сопровождение</h3><p>Со временем меняются требования, сам агент и его среда. Вместе с ними меняются условия, при которых прежние выводы сохраняют силу.</p></article>
+    </div>
+  </div>
+  <footer><span>ТЕСТИРОВАНИЕ И СОПРОВОЖДЕНИЕ</span><span>24.11.2026</span></footer>
+</section>
+<section class="slide" id="scope" data-title="Модель и конфигурация агента" aria-labelledby="title-scope" hidden>
+  <header><span class="logo">ai_sprint<span>.</span></span><span class="eyebrow">ОБЪЕКТ ПРОВЕРКИ</span><span class="page">3 / 24</span></header>
+  <h2 id="title-scope">Модель и конфигурация агента</h2>
+  <div class="content">
+    <p class="term-definition"><strong>Конфигурация агента</strong> — сочетание модели, инструкций, доступных инструментов, разрешений и среды исполнения.</p>
+    <dl class="facts">
+      <div><dt>Модель</dt><dd>Получает сведения из контекста и определяет следующий шаг.</dd></div>
+      <div><dt>Инструменты и среда</dt><dd>Определяют, какие действия возможны и какие сведения об их результате вернутся модели.</dd></div>
+      <div><dt>Область вывода</dt><dd>Поведение агента относится к конфигурации целиком. Для вывода о вкладе одного компонента остальные условия сравнения должны быть сопоставимы.</dd></div>
+    </dl>
+  </div>
+  <footer><span>ТЕСТИРОВАНИЕ И СОПРОВОЖДЕНИЕ</span><span>24.11.2026</span></footer>
+</section>
+<section class="slide" id="requirements" data-title="Требование, критерий и эталон" aria-labelledby="title-requirements" hidden>
+  <header><span class="logo">ai_sprint<span>.</span></span><span class="eyebrow">ОСНОВАНИЯ ПРОВЕРКИ</span><span class="page">4 / 24</span></header>
+  <h2 id="title-requirements">Требование, критерий и эталон</h2>
+  <div class="content">
+    <div class="sequence">
+      <div><h3>Требование</h3><p>Свойство, которым должна обладать система, или поведение, которое она должна обеспечивать.</p></div>
+      <div><h3>Критерий</h3><p>Условие, по которому можно установить, выполнено ли требование.</p></div>
+      <div><h3>Эталон</h3><p>Заранее установленное ожидаемое поведение или допустимый результат, с которым сопоставляют наблюдение.</p></div>
+    </div>
+    <p>У требования может быть несколько корректных реализаций. Если способ реализации свободен, критерий описывает общее для них наблюдаемое свойство.</p>
+  </div>
+  <footer><span>ТЕСТИРОВАНИЕ И СОПРОВОЖДЕНИЕ</span><span>24.11.2026</span></footer>
+</section>
+<section class="slide" id="dataset" data-title="Проверочная задача и набор задач" aria-labelledby="title-dataset" hidden>
+  <header><span class="logo">ai_sprint<span>.</span></span><span class="eyebrow">ОСНОВАНИЯ ПРОВЕРКИ</span><span class="page">5 / 24</span></header>
+  <h2 id="title-dataset">Проверочная задача и набор задач</h2>
+  <div class="content">
+    <p class="term-definition"><strong>Проверочная задача</strong> — описание цели, исходного состояния и условий работы агента. С задачей связаны критерии её выполнения.</p>
+    <div class="cols">
+      <article class="panel"><h3>Сведения для агента</h3>
+        <div class="packet-drawing" aria-hidden="true">
+          <span class="packet-sheet packet-sheet-back">Поручение</span>
+          <span class="packet-sheet packet-sheet-front">Условия работы</span>
+          <span class="packet-pocket"></span>
+        </div><p>Постановка содержит информацию, доступную к началу работы. Позднее полученные сведения могут раскрывать решение.</p></article>
+      <article class="panel"><h3>Сведения для проверки</h3>
+        <div class="packet-drawing" aria-hidden="true">
+          <span class="packet-sheet packet-sheet-back">Критерии</span>
+          <span class="packet-sheet packet-sheet-front">Свидетельства</span>
+          <span class="packet-pocket"></span>
+        </div><p>Ожидаемое поведение и независимые свидетельства позволяют установить, какие требования выполнены.</p></article>
+    </div>
+    <p>Набор задач определяет охват проверки. При переносе выводов на работу команды важны и состав задач, и частота разных видов работы.</p>
+  </div>
+  <footer><span>ТЕСТИРОВАНИЕ И СОПРОВОЖДЕНИЕ</span><span>24.11.2026</span></footer>
+</section>
+<section class="slide night practice" id="acceptance" data-title="Как написать критерий приёмки" aria-labelledby="title-acceptance" hidden>
+  <header><span class="logo">ai_sprint<span>.</span></span><span class="eyebrow">ОТЧЁТ О МЕДЛЕННЫХ ЗАПРОСАХ</span><span class="page">6 / 24</span></header>
+  <h2 id="title-acceptance">Как написать критерий приёмки</h2>
+  <div class="content">
+    <p>Инженер просит агента написать программу: «Покажи медленные запросы из журнала сервера». У каждого запроса есть номер и длительность в миллисекундах.</p>
+    <div class="cols">
+      <article class="panel"><h3>Что уточнить у инженера</h3><p>С какой длительности запрос считается медленным? Включать ли запрос ровно на пороге? Что инженер хочет увидеть в отчёте?</p></article>
+      <article class="panel"><h3>Что записать в задачу</h3><p>«В отчёте перечислены номера всех запросов длительностью 500 мс и более, каждый по одному разу. Запросы короче 500 мс в отчёт не попадают».</p></article>
+    </div>
+    <p>Назовите условие отбора и видимый результат. По этой записи два человека смогут составить один и тот же список ожидаемых номеров.</p>
+  </div>
+  <footer><span>ТЕСТИРОВАНИЕ И СОПРОВОЖДЕНИЕ</span><span>24.11.2026</span></footer>
+</section>
+<section class="slide" id="trial" data-title="Задача и отдельная попытка" aria-labelledby="title-trial" hidden>
+  <header><span class="logo">ai_sprint<span>.</span></span><span class="eyebrow">НАБЛЮДЕНИЕ</span><span class="page">7 / 24</span></header>
+  <h2 id="title-trial">Задача и отдельная попытка</h2>
+  <div class="content">
+    <p class="term-definition"><strong>Попытка (trial)</strong> — один запуск определённой конфигурации агента на задаче из заданного исходного состояния.</p>
+    <dl class="facts">
+      <div><dt>Начало</dt><dd>Входные данные, состояние среды и доступные ресурсы задают начальные условия.</dd></div>
+      <div><dt>Ход</dt><dd>Агент выбирает действия по мере поступления сведений. Результат одного действия влияет на выбор следующего.</dd></div>
+      <div><dt>Конец</dt><dd>Итоговое состояние и отчёт агента характеризуют эту попытку. Результаты повторных попыток могут различаться.</dd></div>
+    </dl>
+  </div>
+  <footer><span>ТЕСТИРОВАНИЕ И СОПРОВОЖДЕНИЕ</span><span>24.11.2026</span></footer>
+</section>
+<section class="slide" id="trace" data-title="Лог и трейс" aria-labelledby="title-trace" hidden>
+  <header><span class="logo">ai_sprint<span>.</span></span><span class="eyebrow">НАБЛЮДЕНИЕ</span><span class="page">8 / 24</span></header>
+  <h2 id="title-trace">Лог и трейс</h2>
+  <div class="content">
+    <p class="term-definition"><strong>Наблюдаемость</strong> — возможность восстановить существенные сведения о работе системы по данным, доступным извне.</p>
+    <div class="cols">
+      <article class="panel"><h3>Лог (log)</h3><p>Журнал событий программы или инструмента. Отбор событий и подробность записей зависят от настроек журналирования.</p></article>
+      <article class="panel"><h3>Трейс (trace)</h3><p>Запись связанных шагов одной попытки. Она объединяет поручение, обращения к инструментам, полученные результаты и итоговый ответ.</p></article>
+    </div>
+
+    <figure class="trace-flow" role="img" aria-label="Трейс связывает поручение, вызов инструмента, результат и ответ. Результат может содержать фрагмент лога.">
+      <figcaption>Трейс одной попытки</figcaption>
+      <div class="trace-flow-steps" aria-hidden="true">
+        <span class="trace-flow-step">Поручение</span><i class="flow-arrow"></i>
+        <span class="trace-flow-step">Вызов инструмента</span><i class="flow-arrow"></i>
+        <span class="trace-flow-step trace-flow-result">Результат<span class="trace-flow-log">Фрагмент лога</span></span><i class="flow-arrow"></i>
+        <span class="trace-flow-step">Ответ</span>
+      </div>
+    </figure>
+    <p>Фрагмент лога может входить в трейс как результат вызова инструмента. Полнота обеих записей ограничивает допустимые выводы.</p>
+  </div>
+  <footer><span>ТЕСТИРОВАНИЕ И СОПРОВОЖДЕНИЕ</span><span>24.11.2026</span></footer>
+</section>
+<section class="slide" id="evidence" data-title="Что видно из журнала запуска тестов?" aria-labelledby="title-evidence" hidden>
+  <header><span class="logo">ai_sprint<span>.</span></span><span class="eyebrow">НАБЛЮДЕНИЕ</span><span class="page">9 / 24</span></header>
+  <h2 id="title-evidence">Что видно из журнала запуска тестов?</h2>
+  <div class="content">
+    <dl class="facts">
+      <div><dt>Что сделал агент?</dt><dd>После правки кода агент отправил команду запуска тестов. В журнале виден вызов этой команды.</dd></div>
+      <div><dt>Чем закончился запуск?</dt><dd>В выводе команды — «9 тестов прошли, 1 упал». Теперь мы знаем результат этого запуска.</dd></div>
+      <div><dt>Почему упал тест?</dt><dd>Возможно, он падал и раньше. Чтобы проверить влияние правки, сравним один и тот же тест до и после неё в одинаковых условиях.</dd></div>
+    </dl>
+  </div>
+  <footer><span>ТЕСТИРОВАНИЕ И СОПРОВОЖДЕНИЕ</span><span>24.11.2026</span></footer>
+</section>
+<section class="slide" id="methods" data-title="Экспертная и функциональная проверка" aria-labelledby="title-methods" hidden>
+  <header><span class="logo">ai_sprint<span>.</span></span><span class="eyebrow">МЕТОДЫ</span><span class="page">10 / 24</span></header>
+  <h2 id="title-methods">Экспертная и функциональная проверка</h2>
+  <div class="content">
+    <div class="cols">
+      <article class="panel"><h3>Экспертная проверка</h3><p>Специалист соотносит наблюдения с требованиями. Метод применим к свойствам, смысл которых зависит от предметного контекста или толкования условий.</p></article>
+      <article class="panel"><h3>Функциональная проверка</h3><p>Проверяющая программа подаёт входные данные, наблюдает внешнее поведение и сопоставляет его с заданным ожиданием.</p></article>
+    </div>
+    <p>Область метода задаёт сам критерий. Формализованное свойство допускает автоматическую проверку. Свойство со спорным толкованием требует согласованного понимания требования.</p>
+  </div>
+  <footer><span>ТЕСТИРОВАНИЕ И СОПРОВОЖДЕНИЕ</span><span>24.11.2026</span></footer>
+</section>
+<section class="slide" id="functional" data-title="Свойства автоматического функционального теста" aria-labelledby="title-functional" hidden>
+  <header><span class="logo">ai_sprint<span>.</span></span><span class="eyebrow">МЕТОДЫ</span><span class="page">11 / 24</span></header>
+  <h2 id="title-functional">Свойства автоматического функционального теста</h2>
+  <div class="content">
+    <p class="term-definition"><strong>Автоматический функциональный тест</strong> — исполняемая проверка связи между исходными условиями и наблюдаемым поведением системы.</p>
+    <dl class="facts">
+      <div><dt>Чувствительность</dt><dd>Нарушение выбранного требования должно изменять исход проверки.</dd></div>
+      <div><dt>Допустимая вариативность</dt><dd>Изменения внутреннего устройства, сохраняющие требуемое поведение, должны сохранять и исход проверки.</dd></div>
+      <div><dt>Граница охвата</dt><dd>Вывод ограничен входными условиями и теми свойствами, которые действительно наблюдает тест.</dd></div>
+    </dl>
+  </div>
+  <footer><span>ТЕСТИРОВАНИЕ И СОПРОВОЖДЕНИЕ</span><span>24.11.2026</span></footer>
+</section>
+<section class="slide night practice" id="test-case" data-title="Как записать тест" aria-labelledby="title-test-case" hidden>
+  <header><span class="logo">ai_sprint<span>.</span></span><span class="eyebrow">ОТЧЁТ О МЕДЛЕННЫХ ЗАПРОСАХ</span><span class="page">12 / 24</span></header>
+  <h2 id="title-test-case">Как записать тест</h2>
+  <div class="content">
+    <p>Тест «В отчёт попадает только медленный запрос». Запишите ожидаемый ответ до запуска программы.</p>
+    <dl class="facts">
+      <div><dt>Дано</dt><dd>В журнале всего два запроса. Запрос A длился 120 мс, запрос B — 730 мс.</dd></div>
+      <div><dt>Когда</dt><dd>Инженер строит отчёт по этому журналу с порогом 500 мс.</dd></div>
+      <div><dt>Тогда</dt><dd>В списке ровно одна запись с номером B.</dd></div>
+    </dl>
+    <p>Проверка «B есть в отчёте» пропустит ошибку, если туда попадёт и A. Сравните весь список с ожидаемым.</p>
+  </div>
+  <footer><span>ТЕСТИРОВАНИЕ И СОПРОВОЖДЕНИЕ</span><span>24.11.2026</span></footer>
+</section>
+<section class="slide night practice" id="boundary-test" data-title="Как проверить границу" aria-labelledby="title-boundary-test" hidden>
+  <header><span class="logo">ai_sprint<span>.</span></span><span class="eyebrow">ОТЧЁТ О МЕДЛЕННЫХ ЗАПРОСАХ</span><span class="page">13 / 24</span></header>
+  <h2 id="title-boundary-test">Как проверить границу</h2>
+  <div class="content">
+    <p>На 120 и 730 мс правила «дольше 500 мс» и «500 мс и более» дадут одинаковый отчёт. Составьте журнал, на котором они дадут разные ответы.</p>
+    <div class="sequence">
+      <div><h3>A · 499 мс</h3><p>На 1 мс ниже порога. A в отчёт не попадает.</p></div>
+      <div><h3>B · 500 мс</h3><p>Ровно на пороге. B должен попасть в отчёт.</p></div>
+      <div><h3>C · 501 мс</h3><p>На 1 мс выше порога. C тоже должен попасть в отчёт.</p></div>
+    </div>
+    <p>Постройте отчёт по этим трём записям. Ожидаются ровно два номера, B и C, по одному разу в любом порядке. Если в отчёте только C, программа пропустила запрос на границе.</p>
+  </div>
+  <footer><span>ТЕСТИРОВАНИЕ И СОПРОВОЖДЕНИЕ</span><span>24.11.2026</span></footer>
+</section>
+<section class="slide" id="judge" data-title="Роль модели-судьи" aria-labelledby="title-judge" hidden>
+  <header><span class="logo">ai_sprint<span>.</span></span><span class="eyebrow">МЕТОДЫ</span><span class="page">14 / 24</span></header>
+  <h2 id="title-judge">Роль модели-судьи</h2>
+  <div class="content">
+    <p class="term-definition"><strong>Модель-судья (LLM-as-a-judge)</strong> — языковая модель, которая сопоставляет материал с явно заданным критерием.</p>
+    <div class="judge-inputs">
+      <div><h3>Материал</h3><p>Содержание работы и доступные источники сведений о ней.</p></div>
+      <div><h3>Правило</h3><p>Свойство, которое рассматривает судья, и условия, достаточные для вывода.</p></div>
+      <div><h3>Заключение</h3><p>Вывод по критерию с указанием сведений, на которые он опирается.</p></div>
+    </div>
+    <p>Судья ограничен доступным материалом. Свойство внешней системы может требовать отдельного наблюдения.</p>
+  </div>
+  <footer><span>ТЕСТИРОВАНИЕ И СОПРОВОЖДЕНИЕ</span><span>24.11.2026</span></footer>
+</section>
+<section class="slide" id="calibration" data-title="Как проверить саму модель-судью?" aria-labelledby="title-calibration" hidden>
+  <header><span class="logo">ai_sprint<span>.</span></span><span class="eyebrow">МЕТОДЫ</span><span class="page">15 / 24</span></header>
+  <h2 id="title-calibration">Как проверить саму модель-судью?</h2>
+  <div class="content">
+    <p>Агент ответил: «Время ожидания — 30 секунд» и сослался на страницу 5. На этой странице — только инструкция по установке.</p>
+    <div class="cols">
+      <article class="panel"><h3>Модель зачла ответ</h3><p>Ей дали правило «проверь, есть ли ссылка». Ссылка есть.</p></article>
+      <article class="panel"><h3>Инженер отклонил ответ</h3><p>Он открыл страницу 5. Время ожидания там не указано.</p></article>
+    </div>
+    <dl class="facts">
+      <div><dt>Уточняем правило</dt><dd>Засчитывать ответ, только если указанная страница подтверждает значение. Даём судье и ответ, и текст страницы.</dd></div>
+      <div><dt>Проверяем правило</dt><dd>Берём ответы, отложенные до настройки. Инженер и модель оценивают их независимо. Считаем совпадения и разбираем расхождения.</dd></div>
+    </dl>
+  </div>
+  <footer><span>ТЕСТИРОВАНИЕ И СОПРОВОЖДЕНИЕ</span><span>24.11.2026</span></footer>
+</section>
+<section class="slide" id="comparison" data-title="Сравнимость конфигураций" aria-labelledby="title-comparison" hidden>
+  <header><span class="logo">ai_sprint<span>.</span></span><span class="eyebrow">СРАВНИМОСТЬ</span><span class="page">16 / 24</span></header>
+  <h2 id="title-comparison">Сравнимость конфигураций</h2>
+  <div class="content">
+    <p class="term-definition"><strong>Базовая конфигурация</strong> — зафиксированная версия агента, относительно которой рассматривают изменения.</p>
+    <figure class="comparison-fork" aria-label="Одна задача, исходные условия и критерии для базовой и изменённой конфигураций">
+      <div class="comparison-conditions">
+        <span>Общее для обеих</span>
+        <strong>Задача · Исходные условия · Критерии</strong>
+      </div>
+      <span class="comparison-branches" aria-hidden="true"></span>
+      <div class="comparison-targets">
+        <div>Базовая конфигурация</div>
+        <div>Изменённая конфигурация</div>
+      </div>
+    </figure>
+    <div class="cols">
+      <article class="panel"><h3>Попарное сравнение</h3><p>Каждая конфигурация получает ту же задачу в сопоставимом исходном состоянии. Для обеих действуют одни критерии.</p></article>
+      <article class="panel"><h3>Разброс попыток</h3><p>Даже на одной задаче ход работы может различаться. Повторные попытки дают сведения об устойчивости наблюдаемого различия.</p></article>
+    </div>
+    <p>Если одновременно изменились несколько компонентов, различие относится к конфигурациям в целом. Вклад отдельного компонента остаётся неопределённым.</p>
+  </div>
+  <footer><span>ТЕСТИРОВАНИЕ И СОПРОВОЖДЕНИЕ</span><span>24.11.2026</span></footer>
+</section>
+<section class="slide" id="regression" data-title="Регрессия и область покрытия" aria-labelledby="title-regression" hidden>
+  <header><span class="logo">ai_sprint<span>.</span></span><span class="eyebrow">СРАВНИМОСТЬ</span><span class="page">17 / 24</span></header>
+  <h2 id="title-regression">Регрессия и область покрытия</h2>
+  <div class="content">
+    <p class="term-definition"><strong>Регрессия</strong> — утрата ранее обеспеченного свойства после изменения системы.</p>
+    <div class="cols">
+      <article class="panel"><h3>Покрытие</h3><p>Набор проверок охватывает определённые требования и условия. Свойства за пределами этого набора остаются вне наблюдения.</p></article>
+    </div>
+    <p>Для агента с изменчивым поведением единичное различие между попытками ещё не устанавливает устойчивую регрессию.</p>
+  </div>
+  <footer><span>ТЕСТИРОВАНИЕ И СОПРОВОЖДЕНИЕ</span><span>24.11.2026</span></footer>
+</section>
+<section class="slide" id="subagents" data-title="Сабагент и независимость проверки" aria-labelledby="title-subagents" hidden>
+  <header><span class="logo">ai_sprint<span>.</span></span><span class="eyebrow">ДЕЛЕГИРОВАНИЕ</span><span class="page">18 / 24</span></header>
+  <h2 id="title-subagents">Сабагент и независимость проверки</h2>
+  <div class="content">
+    <p class="term-definition"><strong>Сабагент (subagent)</strong> — агент, которому основной агент передаёт отдельную часть работы. Он действует в собственном контексте и возвращает результат основному агенту.</p>
+
+    <figure class="agent-flow" role="img" aria-label="Основной агент передаёт поручение и сведения сабагенту. Сабагент возвращает результат. У обоих могут быть общая модель, данные или критерий.">
+      <div class="agent-flow-shared" aria-hidden="true"><span>Модель, данные или критерий могут быть общими</span></div>
+      <div class="agent-flow-path" aria-hidden="true">
+        <div class="agent-flow-role">Основной агент</div>
+        <div class="agent-flow-exchange">
+          <div class="agent-flow-out"><span>Поручение и сведения</span><i class="flow-arrow"></i></div>
+          <div class="agent-flow-back"><span>Результат</span><i class="flow-arrow"></i></div>
+        </div>
+        <div class="agent-flow-role">Сабагент</div>
+      </div>
+    </figure>
+    <dl class="facts">
+      <div><dt>Контекст</dt><dd>В контекст сабагента входят поручение и переданные ему сведения. Полнота проверки зависит от состава этих сведений.</dd></div>
+      <div><dt>Полномочия</dt><dd>Доступные инструменты определяют, какие наблюдения сабагент может получить самостоятельно.</dd></div>
+      <div><dt>Независимость</dt><dd>Отдельный контекст разделяет ход работы агентов. Общая модель, одинаковые исходные данные или общий критерий могут приводить к связанным ошибкам.</dd></div>
+    </dl>
+  </div>
+  <footer><span>ТЕСТИРОВАНИЕ И СОПРОВОЖДЕНИЕ</span><span>24.11.2026</span></footer>
+</section>
+<section class="slide" id="maintenance" data-title="Версии и воспроизводимость" aria-labelledby="title-maintenance" hidden>
+  <header><span class="logo">ai_sprint<span>.</span></span><span class="eyebrow">СОПРОВОЖДЕНИЕ</span><span class="page">19 / 24</span></header>
+  <h2 id="title-maintenance">Версии и воспроизводимость</h2>
+  <div class="content">
+    <p class="term-definition"><strong>Воспроизводимость условий</strong> — возможность восстановить конфигурацию, исходное состояние и правила проверки, к которым относится вывод.</p>
+    <dl class="facts">
+      <div><dt>Версия агента</dt><dd>Определяет сочетание модели, инструкций, инструментов и их разрешений.</dd></div>
+      <div><dt>Версия проверки</dt><dd>Фиксирует состав задач, критерии и поведение проверяющего механизма.</dd></div>
+      <div><dt>История изменений</dt><dd>Связывает наблюдения с версиями агента и проверки. При смене требований меняется и область применимости прежних результатов.</dd></div>
+    </dl>
+  </div>
+  <footer><span>ТЕСТИРОВАНИЕ И СОПРОВОЖДЕНИЕ</span><span>24.11.2026</span></footer>
+</section>
+<section class="slide" id="takeaways" data-title="Жизненный цикл системы проверок" aria-labelledby="title-takeaways" hidden>
+  <header><span class="logo">ai_sprint<span>.</span></span><span class="eyebrow">СОПРОВОЖДЕНИЕ</span><span class="page">20 / 24</span></header>
+  <h2 id="title-takeaways">Жизненный цикл системы проверок</h2>
+  <div class="content">
+    <div class="sequence">
+      <div><h3>Требования</h3><p>Определяют существенные свойства системы. Критерии указывают, по каким наблюдениям можно установить выполнение требований.</p></div>
+      <div><h3>Наблюдения</h3><p>Связывают эти свойства с конкретными задачами, попытками и условиями исполнения.</p></div>
+      <div><h3>Сопровождение</h3><p>Сохраняет связь между требованиями и проверками при изменениях агента и его среды.</p></div>
+    </div>
+    <p>Новые сведения об эксплуатации уточняют область покрытия. История версий сохраняет основания прежних выводов, даже когда состав проверок меняется.</p>
+  </div>
+  <footer><span>ТЕСТИРОВАНИЕ И СОПРОВОЖДЕНИЕ</span><span>24.11.2026</span></footer>
+</section>
+<section class="slide night practice skill-workflow" id="skills-requirement" data-title="Как скиллы фиксируют критерий приёмки" aria-labelledby="title-skills-requirement" hidden>
+  <header><span class="logo">ai_sprint<span>.</span></span><span class="eyebrow">ОТВЕТ ИНЖЕНЕРА → СПЕЦИФИКАЦИЯ</span><span class="page">21 / 24</span></header>
+  <h2 id="title-skills-requirement">Как скиллы фиксируют критерий приёмки</h2>
+  <div class="content">
+    <div class="cols">
+      <article class="panel">
+        <h3>/feature-discovery</h3>
+        <blockquote>«Если два прочтения требования дают разные результаты, возьми вход, на котором они расходятся».</blockquote>
+        <p>Агент спрашивает: «Включаем запрос ровно в 500 мс?» Инженер отвечает: «Да». Агент сохраняет ответ в <code>tech.md</code>.</p>
+      </article>
+      <article class="panel">
+        <h3>/create-prd</h3>
+        <blockquote>«Каждый пункт — атомарное, проверяемое требование».</blockquote>
+        <p>В спецификации <code>prd.md</code> появляется правило: «Включать номер каждого запроса длительностью 500 мс и более ровно один раз. Более короткие запросы пропускать».</p>
+      </article>
+    </div>
+    <p>Если инженер ещё не выбрал правило для 500 мс, агент переносит вопрос в спецификацию. От этого ответа зависит ожидаемый результат теста.</p>
+  </div>
+  <footer><span>ТЕСТИРОВАНИЕ И СОПРОВОЖДЕНИЕ</span><span>24.11.2026</span></footer>
+</section>
+<section class="slide night practice skill-workflow" id="skills-verification" data-title="Как скиллы превращают критерий в тест" aria-labelledby="title-skills-verification" hidden>
+  <header><span class="logo">ai_sprint<span>.</span></span><span class="eyebrow">СПЕЦИФИКАЦИЯ → ПРОВЕРКА</span><span class="page">22 / 24</span></header>
+  <h2 id="title-skills-verification">Как скиллы превращают критерий в тест</h2>
+  <div class="content">
+    <div class="cols">
+      <article class="panel">
+        <h3>/prd-to-beads</h3>
+        <blockquote>«Подобрать данные, на которых правдоподобная ошибка изменит проверяемый результат».</blockquote>
+        <p>Агент описывает сценарий: A — 499 мс, B — 500 мс, C — 501 мс. Строим отчёт. Ожидаем только B и C, по одному разу. Инженер утверждает задачу для трекера Beads.</p>
+      </article>
+      <article class="panel">
+        <h3>/senior-developer</h3>
+        <blockquote lang="en">“For an automated check, give the test name and the result of its run.”</blockquote>
+        <p>Агент пишет и запускает тест по утверждённой задаче. Перед закрытием записывает в Beads, какой тест проверил критерий и с каким результатом.</p>
+      </article>
+    </div>
+    <p>Учебный прогон <code>test_report_threshold</code>: с условием <code>&gt; 500</code> тест упал — в отчёте только C. С условием <code>≥ 500</code> тест прошёл — в отчёте B и C.</p>
+  </div>
+  <footer><span>ТЕСТИРОВАНИЕ И СОПРОВОЖДЕНИЕ</span><span>24.11.2026</span></footer>
+</section>
+<section class="slide" id="reading" data-title="Источники" aria-labelledby="title-reading" hidden>
+  <header><span class="logo">ai_sprint<span>.</span></span><span class="eyebrow">ИСТОЧНИКИ</span><span class="page">23 / 24</span></header>
+  <h2 id="title-reading">Источники</h2>
+  <div class="content">
+    <div class="reading">
+      <div><a href="https://github.com/AzretMagometov/ai-system-design-guide/blob/main/ai_evals_comprehensive_study_guide.md" target="_blank" rel="noopener">Руководство по эвалам</a><span>Критерии, трейсы и независимый контроль.</span></div>
+      <div><a href="https://www.anthropic.com/research/demystifying-evals-for-ai-agents" target="_blank" rel="noopener">Anthropic · Эвалы агентов</a><span>Проверочные задачи, попытки и конечное состояние.</span></div>
+      <div><a href="https://code.claude.com/docs/en/sub-agents" target="_blank" rel="noopener">Claude Code · Сабагенты</a><span>Контекст, полномочия и делегирование.</span></div>
+    </div>
+  </div>
+  <footer><span>ТЕСТИРОВАНИЕ И СОПРОВОЖДЕНИЕ</span><span>24.11.2026</span></footer>
+</section>
+<section class="slide night" id="questions" data-title="Выводы и вопросы" aria-labelledby="title-questions" hidden>
+  <header><span class="logo">ai_sprint<span>.</span></span><span class="eyebrow">ЛЕКЦИЯ 04</span><span class="page">24 / 24</span></header>
+  <h2 id="title-questions">Выводы и вопросы</h2>
+  <div class="content">
+    <dl class="facts">
+      <div><dt>До запуска</dt><dd>Согласуйте, что увидит пользователь. На спорной границе запишите, какой результат считать правильным.</dd></div>
+      <div><dt>При проверке</dt><dd>Подберите вход, на котором проявится возможная ошибка. Сравните фактический результат с ожидаемым целиком.</dd></div>
+      <div><dt>После изменения</dt><dd>Повторите те же проверки для новой версии агента. Сохраните версии, условия и результаты, чтобы сравнить попытки.</dd></div>
+    </dl>
+    <div class="audience-questions">
+      <h3>Ваши вопросы</h3>
+      <p>Что из этого вы хотели бы разобрать на примере своей задачи?</p>
+    </div>
+  </div>
+  <footer><span>ТЕСТИРОВАНИЕ И СОПРОВОЖДЕНИЕ</span><span>24.11.2026</span></footer>
+</section>
+</main>
+<nav aria-label="Управление презентацией" class="controls"><button aria-label="Предыдущий слайд" id="previous" title="Назад (←)">←</button><button id="overview-open" title="Все слайды (O)"><span id="counter">01 / 24</span><span class="control-label">Слайды</span></button><button aria-label="Следующий слайд" id="next" title="Дальше (→ / Пробел)">→</button><span class="control-divider"></span><button id="fullscreen" title="Полный экран (F)">Экран <kbd>F</kbd></button></nav>
+<div aria-hidden="true" id="progress"></div>
+<p aria-live="polite" class="sr-only" id="announcement"></p>
+<dialog aria-labelledby="overview-title" id="overview"><div class="overview-header"><h2 id="overview-title">Четвёртая лекция · слайды</h2><button aria-label="Закрыть список слайдов" id="overview-close">×</button></div><ol id="slide-list"></ol><p>← → / Пробел — переход · Home / End — начало / конец · F — полный экран</p></dialog>
+<noscript><p class="no-script">JavaScript отключён: все слайды показаны последовательно. Включите JavaScript для режима презентации.</p><style>.slide[hidden]{display:flex!important}body{overflow:auto}#deck{display:block;height:auto}.slide{position:relative;width:1600px;height:900px;transform:none!important}.controls{display:none}</style></noscript>
+</body>
+</html>
